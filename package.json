@@ -1,0 +1,14 @@
+{
+  "name": "zotero-wps-bridge",
+  "version": "0.2.1",
+  "private": true,
+  "description": "Zotero citation integration for WPS Writer",
+  "license": "AGPL-3.0-or-later",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

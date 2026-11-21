@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<vbox xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+      xmlns:html="http://www.w3.org/1999/xhtml">
+    <html:div class="zwps-pane">
+        <html:h1 id="zwps-title">WPS Writer Integration</html:h1>
+
+        <html:p id="zwps-intro" class="zwps-intro">
+            After installation, WPS Writer shows a Zotero tab. Citation data comes from the running Zotero instance; the WPS add-in only reads and writes Zotero fields in the document.
+        </html:p>
+
+        <html:div id="zwps-warning" class="zwps-warning" hidden="hidden"></html:div>
+
+        <html:div class="zwps-card">
+            <html:div class="zwps-row">
+                <html:span id="zwps-status-label" class="zwps-label">Status</html:span>
+                <html:span id="zwps-status" class="zwps-value">Reading…</html:span>
+            </html:div>
+            <html:div class="zwps-row">
+                <html:span id="zwps-port-label" class="zwps-label">Zotero port</html:span>
+                <html:span id="zwps-port" class="zwps-value">—</html:span>
+            </html:div>
+            <html:div class="zwps-row">
+                <html:span id="zwps-token-label" class="zwps-label">Access token</html:span>
+                <html:span id="zwps-token" class="zwps-value">—</html:span>
+            </html:div>
+            <html:div class="zwps-row zwps-path-row">
+                <html:span id="zwps-paths-label" class="zwps-label">Add-in directories</html:span>
+                <html:div id="zwps-paths" class="zwps-paths"></html:div>
+            </html:div>
+        </html:div>
+
+        <html:div class="zwps-actions">
+            <html:button id="zwps-install" type="button">Install / Repair WPS Add-in</html:button>
+            <html:button id="zwps-uninstall" type="button" class="zwps-secondary">Uninstall</html:button>
+            <html:button id="zwps-refresh" type="button" class="zwps-secondary">Refresh Status</html:button>
+            <html:button id="zwps-open-dir" type="button" class="zwps-secondary">Open Folder</html:button>
+            <html:button id="zwps-force-reset" type="button" class="zwps-danger">Force Reset Stuck Transaction</html:button>
+        </html:div>
+
+        <html:label class="zwps-checkbox">
+            <html:input id="zwps-autoinstall" type="checkbox"/>
+            <html:span id="zwps-autoinstall-text">Check for and update the WPS add-in when Zotero starts</html:span>
+        </html:label>
+
+        <html:label class="zwps-checkbox">
+            <html:input id="zwps-keep-raised" type="checkbox"/>
+            <html:span id="zwps-keep-raised-text">Keep the Zotero citation dialog above WPS</html:span>
+        </html:label>
+
+        <html:div class="zwps-language-row">
+            <html:label id="zwps-language-label" for="zwps-language">Interface language</html:label>
+            <html:select id="zwps-language">
+                <html:option value="auto">Automatic</html:option>
+                <html:option value="en-US">English (United States)</html:option>
+                <html:option value="zh-CN">简体中文</html:option>
+                <html:option value="zh-TW">繁體中文</html:option>
+            </html:select>
+        </html:div>
+
+        <html:hr/>
+
+        <html:h2 id="zwps-help-title">Instructions</html:h2>
+        <html:ol class="zwps-help">
+            <html:li id="zwps-help-1"></html:li>
+            <html:li id="zwps-help-2"></html:li>
+            <html:li id="zwps-help-3"></html:li>
+            <html:li id="zwps-help-4"></html:li>
+        </html:ol>
+
+        <html:p id="zwps-note" class="zwps-note"></html:p>
+
+        <html:div class="zwps-footer">
+            <html:button id="zwps-reset-token" type="button" class="zwps-danger">Reset Access Token</html:button>
+            <html:span id="zwps-reset-hint" class="zwps-hint"></html:span>
+        </html:div>
+    </html:div>
+</vbox>

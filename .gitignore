@@ -1,0 +1,9 @@
+node_modules/
+build/
+dist/
+*.xpi
+*.zip
+*.log
+.DS_Store
+Thumbs.db
+.idea/

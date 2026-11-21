@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" role="img" aria-label="Zotero citation">
+  <defs>
+    <linearGradient id="bg" x1="4" y1="2" x2="28" y2="30" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0A1B2C"/>
+      <stop offset="1" stop-color="#12344D"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="30" height="30" rx="7" fill="url(#bg)"/>
+  <rect x="1.5" y="1.5" width="29" height="29" rx="6.5" fill="none" stroke="#F7FBFF" stroke-opacity="0.10"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 10.5h4.2v5.2c0 2.6-1.5 4.3-4.2 4.8v-2.6c1.1-.3 1.6-.9 1.6-2.1H9z" fill="#F7FBFF"/>
+    <path d="M17.8 10.5H22v5.2c0 2.6-1.5 4.3-4.2 4.8v-2.6c1.1-.3 1.6-.9 1.6-2.1h-1.6z" fill="#F7FBFF"/>
+    <path d="M8.5 24.5h15" stroke="#35D8C6" stroke-width="2"/>
+  </g>
+</svg>
