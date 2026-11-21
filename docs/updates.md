@@ -28,13 +28,15 @@ XPI 下载页  -> 用户首次安装时使用（可选）
     "zotero": {
       "id": "zotero-wps@wps-zotero",
       "update_url": "https://example.com/zotero-wps-bridge/updates.json",
-      "strict_min_version": "6.999",
-      "strict_max_version": "10.*"
+      "strict_min_version": "7.0",
+      "strict_max_version": "10.9.9"
     }
   }
 }
 ```
 
+> Zotero 10 要求 `applications.zotero.update_url` 必须存在，否则插件会被判定为损坏并拒绝安装。仓库中的 `.invalid` 地址只是本地构建占位符；正式发布必须通过 `UPDATE_URL` 覆盖。
+>
 > 插件 ID 保持 `zotero-wps@wps-zotero` 不变。Zotero 以 ID 识别插件，修改 ID 会导致已安装版本无法自动升级；仓库名、显示名和 XPI 文件名可以独立修改。
 
 ## updates.json 格式

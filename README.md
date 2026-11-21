@@ -141,6 +141,8 @@ npm test
 
 ### 自动更新
 
+> 源码中的 `update_url` 是 `.invalid` 占位地址，仅用于让本地构建可以通过 Zotero 10 的安装校验。正式发布必须设置 `UPDATE_URL`，否则不会产生可用的自动更新。
+
 不需要自己的服务器，静态 HTTPS 托管即可（GitHub Pages、GitHub Releases、Cloudflare Pages、对象存储或现有 Nginx）：
 
 ```bash

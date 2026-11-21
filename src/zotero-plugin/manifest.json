@@ -10,8 +10,9 @@
   "applications": {
     "zotero": {
       "id": "zotero-wps@wps-zotero",
-      "strict_min_version": "6.999",
-      "strict_max_version": "10.*"
+      "update_url": "https://example.invalid/zotero-wps-bridge/updates.json",
+      "strict_min_version": "7.0",
+      "strict_max_version": "10.9.9"
     }
   }
 }

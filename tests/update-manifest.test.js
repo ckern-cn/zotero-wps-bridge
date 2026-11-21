@@ -19,6 +19,8 @@ const updateLink = 'https://example.com/' + pkg.name + '/' + xpiName;
 test('creates a Zotero update manifest for the current plugin', () => {
     assert.equal(pluginManifest.version, pkg.version,
         'manifest.json and package.json versions must stay in sync');
+    assert.ok(zoteroApp.update_url,
+        'manifest.json must provide applications.zotero.update_url for Zotero 10');
     const manifest = createUpdateManifest({
         id: zoteroApp.id,
         version: pkg.version,
