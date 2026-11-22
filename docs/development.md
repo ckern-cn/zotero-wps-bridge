@@ -82,7 +82,7 @@ npm run build
 npm run build:site
 ```
 
-详细部署方式（Cloudflare Pages / GitHub Pages、DNS、`updates.json`）见 [`../site/README.md`](../site/README.md)。
+详细部署方式（Cloudflare Pages / GitHub Pages、DNS、`updates.json`）见 [`../site/README.md`](../site/README.md)。阿里云香港服务器使用 [`deploy-aliyun.md`](deploy-aliyun.md) 和 `npm run deploy:site`。
 
 ## 单元测试
 
