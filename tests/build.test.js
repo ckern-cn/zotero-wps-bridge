@@ -1,13 +1,21 @@
 'use strict';
 
-const test = require('node:test');
+const { test, after } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
 const vm = require('node:vm');
 const { execFileSync } = require('node:child_process');
 
 const ROOT = path.join(__dirname, '..');
+const TEMP = fs.mkdtempSync(path.join(os.tmpdir(), 'zw-build-test-'));
+const TEMP_BUILD = path.join(TEMP, 'build');
+const TEMP_DIST = path.join(TEMP, 'dist');
+
+after(() => {
+    fs.rmSync(TEMP, { recursive: true, force: true });
+});
 
 function walk(dir, base = dir, result = []) {
     for (const name of fs.readdirSync(dir)) {
@@ -29,7 +37,9 @@ test('build produces the XPI, WPS add-on ZIP, and checksums', () => {
         env: Object.assign({}, process.env, {
             UPDATE_URL: '',
             UPDATE_LINK: '',
-            UPDATE_LINK_BASE: ''
+            UPDATE_LINK_BASE: '',
+            BUILD_DIR: TEMP_BUILD,
+            DIST_DIR: TEMP_DIST
         })
     });
 
@@ -41,20 +51,20 @@ test('build produces the XPI, WPS add-on ZIP, and checksums', () => {
     ];
 
     for (const name of expected) {
-        const file = path.join(ROOT, 'dist', name);
+        const file = path.join(TEMP_DIST, name);
         assert.ok(fs.existsSync(file), name + ' should exist');
         assert.ok(fs.statSync(file).size > 0, name + ' should not be empty');
     }
 
-    const sums = fs.readFileSync(path.join(ROOT, 'dist', 'SHA256SUMS.txt'), 'utf8');
+    const sums = fs.readFileSync(path.join(TEMP_DIST, 'SHA256SUMS.txt'), 'utf8');
     assert.match(sums, new RegExp(expected[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
     assert.match(sums, new RegExp(expected[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
 });
 
 test('build embeds every WPS add-in file except the generated config', () => {
     const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
-    const addonDir = path.join(ROOT, 'build', 'wps-addon');
-    const pluginDir = path.join(ROOT, 'build', 'zotero-plugin');
+    const addonDir = path.join(TEMP_BUILD, 'wps-addon');
+    const pluginDir = path.join(TEMP_BUILD, 'zotero-plugin');
     const bundlePath = path.join(pluginDir, 'content', 'wps-addon-files.js');
     const source = fs.readFileSync(bundlePath, 'utf8');
     const context = {};

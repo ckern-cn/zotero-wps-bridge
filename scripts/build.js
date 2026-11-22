@@ -16,8 +16,12 @@ const { createUpdateManifest } = require('./update-manifest');
 const ROOT = path.resolve(__dirname, '..');
 const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
 const VERSION = pkg.version;
-const BUILD = path.join(ROOT, 'build');
-const DIST = path.join(ROOT, 'dist');
+const BUILD = process.env.BUILD_DIR
+    ? path.resolve(process.env.BUILD_DIR)
+    : path.join(ROOT, 'build');
+const DIST = process.env.DIST_DIR
+    ? path.resolve(process.env.DIST_DIR)
+    : path.join(ROOT, 'dist');
 const PLUGIN_SRC = path.join(ROOT, 'src', 'zotero-plugin');
 const ADDON_SRC = path.join(ROOT, 'src', 'wps-addon');
 const SHARED_SRC = path.join(ROOT, 'src', 'shared');
