@@ -14,7 +14,7 @@ var ZoteroWPSGlobal = this;
 
 var ZoteroWPS = {
     id: null,
-    version: '0.2.7',
+    version: '0.2.9',
     rootURI: null,
     token: null,
     addonFiles: null,
@@ -840,7 +840,8 @@ var ZoteroWPS = {
             const names = await IOUtils.getChildren(dir);
             let best = null;
             for (let name of names) {
-                const match = /^zotero-wps_(.+)$/.exec(name);
+                const base = PathUtils.filename(name);
+                const match = /^zotero-wps_(.+)$/.exec(base);
                 if (!match) {
                     continue;
                 }
@@ -934,9 +935,13 @@ var ZoteroWPS = {
 
         const names = await IOUtils.getChildren(dir).catch(function () { return []; });
         for (let name of names) {
-            if (/^zotero-wps_/.test(name) && name !== 'zotero-wps_' + version) {
+            const base = PathUtils.filename(name);
+            if (/^zotero-wps_/.test(base) && base !== 'zotero-wps_' + version) {
                 try {
-                    await IOUtils.remove(PathUtils.join(dir, name), { recursive: true, ignoreAbsent: true });
+                    await IOUtils.remove(PathUtils.join(dir, base), {
+                        recursive: true,
+                        ignoreAbsent: true
+                    });
                 }
                 catch (e) {
                     Zotero.logError(e);
@@ -1177,8 +1182,9 @@ var ZoteroWPS = {
         for (let dir of dirs) {
             const names = await IOUtils.getChildren(dir).catch(function () { return []; });
             for (let name of names) {
-                if (/^zotero-wps_/.test(name)) {
-                    await IOUtils.remove(PathUtils.join(dir, name), {
+                const base = PathUtils.filename(name);
+                if (/^zotero-wps_/.test(base)) {
+                    await IOUtils.remove(PathUtils.join(dir, base), {
                         recursive: true,
                         ignoreAbsent: true
                     });

@@ -6,7 +6,12 @@
     let paneTranslator = null;
 
     function plugin() {
-        return Zotero.ZoteroWPS;
+        try {
+            return Zotero.ZoteroWPS;
+        }
+        catch (e) {
+            return null;
+        }
     }
 
     function detectPaneLocale() {
@@ -114,10 +119,6 @@
     }
 
     function applyStaticText() {
-        const p = plugin();
-        if (!p) {
-            return;
-        }
         setText('zwps-title', T('zotero.prefs.title'));
         setText('zwps-intro', T('zotero.prefs.intro'));
         setText('zwps-status-label', T('zotero.prefs.statusLabel'));
@@ -150,7 +151,9 @@
             'zh-TW': T('zotero.prefs.languageZhTW')
         };
         const language = el('zwps-language');
-        const options = language ? language.getElementsByTagName('option') : [];
+        const options = language
+            ? (language.options || language.querySelectorAll('option'))
+            : [];
         for (let i = 0; i < options.length; i++) {
             const option = options[i];
             const value = option.getAttribute('value');
@@ -166,7 +169,8 @@
         };
         const ribbonLayout = el('zwps-ribbon-layout');
         const ribbonOptions = ribbonLayout
-            ? ribbonLayout.getElementsByTagName('option') : [];
+            ? (ribbonLayout.options || ribbonLayout.querySelectorAll('option'))
+            : [];
         for (let i = 0; i < ribbonOptions.length; i++) {
             const option = ribbonOptions[i];
             const value = option.getAttribute('value');
@@ -219,7 +223,7 @@
     async function refresh() {
         const p = plugin();
         if (!p) {
-            setText('zwps-status', 'Zotero WPS Bridge plugin is not loaded', 'zwps-bad');
+            setText('zwps-status', T('zotero.prefs.pluginNotLoaded'), 'zwps-bad');
             return;
         }
         try {
@@ -449,11 +453,13 @@
     let initAttempts = 0;
 
     function init() {
-        // The preference pane can be opened before the plugin has finished
-        // assigning Zotero.ZoteroWPS. Retry briefly instead of leaving the
-        // static English markup in place.
-        if (!plugin() && initAttempts++ < 40) {
-            setTimeout(init, 250);
+        // Wait for both the pane fragment and the plugin object. The pane
+        // script can run before the fragment is inserted, while readyState is
+        // already "complete", so a DOMContentLoaded listener alone is not
+        // enough.
+        const hasDom = !!el('zwps-title');
+        if ((!hasDom || !plugin()) && initAttempts++ < 100) {
+            setTimeout(init, 100);
             return;
         }
         applyStaticText();

@@ -7,5 +7,5 @@ window.ZOTERO_WPS_CONFIG = {
     token: '',
     locale: 'auto',
     ribbonLayout: 'current',
-    addonVersion: '0.2.7'
+    addonVersion: '0.2.9'
 };

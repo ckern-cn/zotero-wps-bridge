@@ -9,7 +9,7 @@
 
     function version() {
         const cfg = U.getConfig();
-        return cfg.addonVersion || '0.2.7';
+        return cfg.addonVersion || '0.2.9';
     }
 
     function docId() {

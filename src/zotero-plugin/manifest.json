@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Zotero WPS Bridge",
-  "version": "0.2.7",
+  "version": "0.2.9",
   "description": "Use Zotero citations and bibliographies in WPS Writer",
   "icons": {
     "48": "content/wps.svg",
