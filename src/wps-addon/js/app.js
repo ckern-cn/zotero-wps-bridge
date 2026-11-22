@@ -90,6 +90,33 @@
         U.alertUser(U.t('wps.alert.about', { version: version() }));
     }
 
+    function isBridgeReachable() {
+        try {
+            const response = window.ZoteroWPSClient.create('connection-check').ping();
+            return response.status === 200
+                && response.json
+                && response.json.ok;
+        }
+        catch (e) {
+            U.debug('bridge check failed', e);
+            return false;
+        }
+    }
+
+    function confirmUnlink() {
+        if (!U.getConfig().token) {
+            U.alertUser(U.t('wps.alert.unlinkNoToken'));
+            return;
+        }
+        if (!isBridgeReachable()) {
+            U.alertUser(U.t('wps.alert.unlinkNeedsZotero'));
+            return;
+        }
+        if (confirm(U.t('wps.confirm.removeCodes'))) {
+            runTransaction('removeCodes');
+        }
+    }
+
     function OnAddinLoad(ui) {
         ribbonUI = ui;
         try {
@@ -171,9 +198,7 @@
                 runTransaction('exportDocument');
                 break;
             case 'btnRemoveCodes':
-                if (confirm(U.t('wps.confirm.removeCodes'))) {
-                    runTransaction('removeCodes');
-                }
+                confirmUnlink();
                 break;
             case 'btnCheckConnection':
                 checkConnection();
