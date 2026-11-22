@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.3
+
+- 自定义帮助/连接提示对话框移除系统标题栏，并改为铺满窗口的布局，去掉周围留白。
+- 修复 Zotero 设置中 WPS 面板无法打开的问题：`preferences.xhtml` 按 Zotero 的 XHTML fragment 方式加载，移除文件头部的 XML 声明和处理指令。
+
 ## 0.2.2
 
 - 将 Zotero 插件图标替换为 ZW 品牌图标。

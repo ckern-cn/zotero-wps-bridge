@@ -14,7 +14,7 @@ var ZoteroWPSGlobal = this;
 
 var ZoteroWPS = {
     id: null,
-    version: '0.2.2',
+    version: '0.2.3',
     rootURI: null,
     token: null,
     addonFiles: null,
@@ -49,6 +49,8 @@ var ZoteroWPS = {
     _origKeepRaised: undefined,
     _keepRaisedApplied: false,
     _installTimer: null,
+    _prefPaneRetry: null,
+    _prefPaneRetries: 0,
     _windows: new WeakSet(),
 
     startup: function (data) {
@@ -88,6 +90,10 @@ var ZoteroWPS = {
         if (this._installTimer) {
             clearTimeout(this._installTimer);
             this._installTimer = null;
+        }
+        if (this._prefPaneRetry) {
+            clearTimeout(this._prefPaneRetry);
+            this._prefPaneRetry = null;
         }
         try {
             if (Zotero.getMainWindows) {
@@ -613,6 +619,7 @@ var ZoteroWPS = {
 
     registerPrefPane: async function () {
         if (!Zotero.PreferencePanes) {
+            this.schedulePrefPaneRetry();
             return;
         }
         try {
@@ -625,10 +632,25 @@ var ZoteroWPS = {
                 scripts: [this.rootURI + 'content/preferences.js'],
                 stylesheets: [this.rootURI + 'content/preferences.css']
             });
+            this._prefPaneRetries = 0;
         }
         catch (e) {
             Zotero.logError(e);
+            this.schedulePrefPaneRetry();
         }
+    },
+
+    schedulePrefPaneRetry: function () {
+        if (this._prefPaneRetry || this._prefPaneRetries >= 3) {
+            return;
+        }
+        this._prefPaneRetries++;
+        this._prefPaneRetry = setTimeout(function () {
+            ZoteroWPS._prefPaneRetry = null;
+            ZoteroWPS.registerPrefPane().catch(function (e) {
+                Zotero.logError(e);
+            });
+        }, 2500);
     },
 
     openPreferences: function () {

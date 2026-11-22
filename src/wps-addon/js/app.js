@@ -9,7 +9,7 @@
 
     function version() {
         const cfg = U.getConfig();
-        return cfg.addonVersion || '0.2.2';
+        return cfg.addonVersion || '0.2.3';
     }
 
     function docId() {
@@ -122,7 +122,9 @@
                     title || 'Zotero WPS Bridge',
                     Math.round(560 * scale),
                     Math.round(500 * scale),
-                    true
+                    true,
+                    false,
+                    2
                 );
                 if (shown !== false) {
                     return true;
