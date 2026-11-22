@@ -3,10 +3,51 @@
     'use strict';
 
     const U = window.ZoteroWPSUtil;
-    const E = function () { return wps.Enum || U.WPS_ENUM_FALLBACK; };
+    const E = function () {
+        return Object.assign({}, U.WPS_ENUM_FALLBACK, wps.Enum || {});
+    };
 
     function isBlockElement(name) {
         return ['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'pre', 'li', 'tr'].indexOf(name) >= 0;
+    }
+
+    function safeHref(value) {
+        const href = String(value == null ? '' : value).trim();
+        if (!href) {
+            return '';
+        }
+        const compact = href.replace(/[\u0000-\u0020]+/g, '');
+        const match = /^([a-z][a-z0-9+.-]*):/i.exec(compact);
+        if (match && !/^(https?|mailto|zotero)$/i.test(match[1])) {
+            return '';
+        }
+        return href;
+    }
+
+    /**
+     * Build a range in the same story as the supplied range. Range.Start/End
+     * are story-relative in Word/WPS, so Document.Range() is only correct for
+     * main-text content; use Duplicate/SetRange for footnotes and endnotes.
+     */
+    function storyRange(range, start, end) {
+        if (!range) {
+            return null;
+        }
+        try {
+            let duplicate = null;
+            if (typeof range.Duplicate === 'function') {
+                duplicate = range.Duplicate();
+            }
+            else if (range.Duplicate) {
+                duplicate = range.Duplicate;
+            }
+            if (duplicate && typeof duplicate.SetRange === 'function') {
+                duplicate.SetRange(start, end);
+                return duplicate;
+            }
+        }
+        catch (e) {}
+        return range.Document.Range(start, end);
     }
 
     function hasBlockChildren(element) {
@@ -51,8 +92,14 @@
                     if (value.indexOf('underline') >= 0) {
                         result.underline = true;
                     }
+                    else if (value.indexOf('none') >= 0) {
+                        result.underline = false;
+                    }
                     if (value.indexOf('line-through') >= 0) {
                         result.strike = true;
+                    }
+                    else if (value.indexOf('none') >= 0) {
+                        result.strike = false;
                     }
                     break;
                 case 'color':
@@ -64,15 +111,24 @@
                 case 'vertical-align':
                     if (value === 'super') {
                         result.superscript = true;
+                        result.subscript = false;
                     }
                     else if (value === 'sub') {
                         result.subscript = true;
+                        result.superscript = false;
+                    }
+                    else if (value === 'baseline') {
+                        result.superscript = false;
+                        result.subscript = false;
                     }
                     break;
                 case 'font-variant':
                 case 'font-variant-caps':
                     if (value.indexOf('small-caps') >= 0) {
                         result.smallCaps = true;
+                    }
+                    else if (value === 'normal') {
+                        result.smallCaps = false;
                     }
                     break;
                 case 'text-transform':
@@ -107,7 +163,7 @@
             result.subscript = true;
         }
         else if (name === 'a') {
-            result.href = element.getAttribute('href') || '';
+            result.href = safeHref(element.getAttribute('href'));
         }
         return parseStyleAttribute(element.getAttribute('style'), result);
     }
@@ -151,13 +207,13 @@
         }
         try {
             const font = range.Font;
-            if (style.bold) font.Bold = true;
-            if (style.italic) font.Italic = true;
-            if (style.underline) font.Underline = true;
-            if (style.strike) font.StrikeThrough = true;
-            if (style.smallCaps) font.SmallCaps = true;
-            if (style.superscript) font.Superscript = true;
-            if (style.subscript) font.Subscript = true;
+            if (typeof style.bold === 'boolean') font.Bold = style.bold;
+            if (typeof style.italic === 'boolean') font.Italic = style.italic;
+            if (typeof style.underline === 'boolean') font.Underline = style.underline;
+            if (typeof style.strike === 'boolean') font.StrikeThrough = style.strike;
+            if (typeof style.smallCaps === 'boolean') font.SmallCaps = style.smallCaps;
+            if (typeof style.superscript === 'boolean') font.Superscript = style.superscript;
+            if (typeof style.subscript === 'boolean') font.Subscript = style.subscript;
             if (style.color) {
                 font.TextColor.RGB = U.rgbToBgr(style.color);
             }
@@ -169,6 +225,9 @@
             }
             if (style.textTransform === 'uppercase') {
                 font.AllCaps = true;
+            }
+            else if (style.textTransform) {
+                font.AllCaps = false;
             }
         }
         catch (e) {
@@ -207,12 +266,11 @@
         else if (style && style.textTransform === 'lowercase') {
             text = String(text).toLowerCase();
         }
-        const doc = range.Document;
         const start = range.End;
         range.InsertAfter(text);
         const end = range.End;
         if (end > start) {
-            const textRange = doc.Range(start, end);
+            const textRange = storyRange(range, start, end);
             applyFontStyle(textRange, style);
             if (style && style.href) {
                 // Add hyperlinks after all text has been inserted. WPS can
@@ -236,21 +294,21 @@
     }
 
     function insertList(range, element, style, ctx) {
-        const doc = range.Document;
         const ordered = element.nodeName.toLowerCase() === 'ol';
+        let emitted = false;
         for (let i = 0; i < element.childNodes.length; i++) {
             const child = element.childNodes[i];
             if (child.nodeType !== 1 || child.nodeName.toLowerCase() !== 'li') {
                 continue;
             }
-            if (i > 0) {
+            if (emitted) {
                 insertParagraph(range);
             }
             const start = range.End;
             walkChildren(range, child, style, ctx);
             const end = range.End;
             if (end > start) {
-                const itemRange = doc.Range(start, end);
+                const itemRange = storyRange(range, start, end);
                 try {
                     if (ordered) {
                         itemRange.ListFormat.ApplyNumberDefault();
@@ -263,6 +321,7 @@
                     U.debug('list formatting failed', e);
                 }
             }
+            emitted = true;
         }
     }
 
@@ -297,7 +356,7 @@
     }
 
     function docRange(range, start, end) {
-        return range.Document.Range(start, end);
+        return storyRange(range, start, end);
     }
 
     function walkChildren(range, element, style, ctx) {
@@ -345,6 +404,14 @@
             ctx.insertedBlock = true;
             return;
         }
+        if (name === 'td' || name === 'th') {
+            walkChildren(range, node, childStyle, ctx);
+            if (name === 'th' || node.nextSibling) {
+                range.InsertAfter('\t');
+                range.Collapse(E().wdCollapseEnd);
+            }
+            return;
+        }
         if (name === 'ul' || name === 'ol' || name === 'table' || name === 'tr') {
             if (ctx.insertedBlock) {
                 insertParagraph(range);
@@ -388,8 +455,10 @@
         }
         for (let link of ctx.hyperlinks) {
             try {
-                range.Document.Hyperlinks.Add(
-                    range.Document.Range(link.start, link.end), link.href);
+                const linkRange = storyRange(range, link.start, link.end);
+                if (linkRange) {
+                    range.Document.Hyperlinks.Add(linkRange, link.href);
+                }
             }
             catch (e) {
                 U.debug('failed to add hyperlink', link.href, e);
@@ -470,7 +539,7 @@
         const end = range.End;
         if (end > start && bibStyle) {
             try {
-                const fmt = range.Document.Range(start, end).Paragraphs.Format;
+                const fmt = storyRange(range, start, end).Paragraphs.Format;
                 fmt.FirstLineIndent = U.twip2pt(bibStyle.firstLineIndent);
                 fmt.LeftIndent = U.twip2pt(bibStyle.indent);
                 if (bibStyle.lineSpacing) {
@@ -518,13 +587,12 @@
             insertBibliography(range, html, style);
         }
         else {
+            // insertHTML already inserts the raw markup when parsing fails.
             ok = insertHTML(range, html, {});
-            if (!ok) {
-                range.InsertAfter(String(html || ''));
-            }
         }
         try {
-            if (field.Result.Text.length > 1) {
+            const resultText = field.Result.Text;
+            if (resultText && resultText.charAt(0) === '!') {
                 const guard = field.Result;
                 guard.Collapse(E().wdCollapseStart);
                 guard.Delete(E().wdCharacter, 1);

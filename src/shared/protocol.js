@@ -17,9 +17,11 @@
 
     const CITATION = 'ITEM CSL_CITATION ';
     const BIBLIOGRAPHY = 'BIBL ';
+    const BIBLIOGRAPHY_SUFFIX = ' CSL_BIBLIOGRAPHY';
 
     const WORD_CITATION = ' ADDIN ZOTERO_ITEM CSL_CITATION ';
     const WORD_BIBLIOGRAPHY = ' ADDIN ZOTERO_BIBL ';
+    const WORD_PREFIX = 'ADDIN ZOTERO_';
 
     const TEMP = 'TEMP';
     const TEMP_TEXT = '{Updating}';
@@ -64,7 +66,10 @@
             return null;
         }
 
-        const body = value.substring(offset).trim();
+        let body = value.substring(offset).trim();
+        if (type === 'bibliography' && body.endsWith(BIBLIOGRAPHY_SUFFIX)) {
+            body = body.substring(0, body.length - BIBLIOGRAPHY_SUFFIX.length).trim();
+        }
         if (body) {
             try {
                 json = JSON.parse(body);
@@ -82,11 +87,8 @@
      */
     function toHTTPFieldCode(code) {
         let value = String(code == null ? '' : code).trim();
-        if (value.indexOf('ADDIN ZOTERO_BIBL') === 0) {
-            value = value.substring('ADDIN ZOTERO_'.length);
-        }
-        else if (value.indexOf('ADDIN ZOTERO_ITEM CSL_CITATION') === 0) {
-            value = value.substring('ADDIN ZOTERO_'.length);
+        if (value.indexOf(WORD_PREFIX) === 0) {
+            value = value.substring(WORD_PREFIX.length);
         }
         return value;
     }
@@ -126,7 +128,8 @@
         }
         parsed.json.properties.noteIndex = noteIndex;
         const head = parsed.type === 'citation' ? CITATION : BIBLIOGRAPHY;
-        return head + JSON.stringify(parsed.json);
+        const suffix = parsed.type === 'bibliography' ? BIBLIOGRAPHY_SUFFIX : '';
+        return head + JSON.stringify(parsed.json) + suffix;
     }
 
     /**
@@ -137,22 +140,45 @@
         if (!data) {
             return data;
         }
-        let value = String(data);
-        value = value.replace(/value="Field"/g, 'value="Http"');
-        // Zotero 5/6 accepted a JSON-encoded document-data string. If we get
-        // JSON, double-encode it to match what Google Docs returns.
+        const value = String(data);
         const trimmed = value.trim();
-        if (trimmed.charAt(0) === '{') {
-            return JSON.stringify(value);
+        if (trimmed.charAt(0) === '{' || trimmed.charAt(0) === '"') {
+            try {
+                let parsed = JSON.parse(value);
+                if (typeof parsed === 'string') {
+                    // Legacy versions double-encoded JSON document data.
+                    parsed = JSON.parse(parsed);
+                }
+                if (parsed && parsed.prefs && parsed.prefs.fieldType === 'Field') {
+                    parsed.prefs.fieldType = 'Http';
+                }
+                return JSON.stringify(parsed);
+            }
+            catch (e) {
+                return value;
+            }
         }
-        return value;
+        return value.replace(/value="Field"/g, 'value="Http"');
     }
 
     function docDataForWPS(data) {
         if (!data) {
             return data;
         }
-        return String(data).replace(/value="Http"/g, 'value="Field"');
+        const value = String(data);
+        if (value.trim().charAt(0) === '{') {
+            try {
+                const parsed = JSON.parse(value);
+                if (parsed && parsed.prefs && parsed.prefs.fieldType === 'Http') {
+                    parsed.prefs.fieldType = 'Field';
+                }
+                return JSON.stringify(parsed);
+            }
+            catch (e) {
+                return value;
+            }
+        }
+        return value.replace(/value="Http"/g, 'value="Field"');
     }
 
     function splitProperty(value) {
@@ -180,6 +206,7 @@
     return {
         CITATION,
         BIBLIOGRAPHY,
+        BIBLIOGRAPHY_SUFFIX,
         WORD_CITATION,
         WORD_BIBLIOGRAPHY,
         TEMP,

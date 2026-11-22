@@ -134,14 +134,16 @@
             closeLabel: U.t('wps.dialog.close')
         };
         try {
-            const app = typeof wps !== 'undefined'
-                    && typeof wps.ShowDialog === 'function'
-                ? wps
-                : window.Application;
+            const wpsObject = typeof wps !== 'undefined' ? wps : null;
+            const application = window.Application;
+            const app = wpsObject && typeof wpsObject.ShowDialog === 'function'
+                ? wpsObject
+                : application;
             // WPS exposes PluginStorage on both the application and the wps
             // add-in object, depending on version. The dialog page may not get
             // a wps object, so also pass the payload in the URL as a fallback.
-            const storage = (typeof wps !== 'undefined' && wps.PluginStorage)
+            const storage = (wpsObject && wpsObject.PluginStorage)
+                || (application && application.PluginStorage)
                 || (app && app.PluginStorage);
             if (app && typeof app.ShowDialog === 'function' && storage) {
                 const key = 'zwps-dialog-' + Date.now() + '-'

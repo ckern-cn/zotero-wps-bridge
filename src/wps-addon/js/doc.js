@@ -15,7 +15,7 @@
     let ctx = null;
 
     function E() {
-        return wps.Enum || U.WPS_ENUM_FALLBACK;
+        return Object.assign({}, U.WPS_ENUM_FALLBACK, wps.Enum || {});
     }
 
     function isFootnoteField(field) {
@@ -234,7 +234,7 @@
         return false;
     }
 
-    function getFieldData(field) {
+    function getFieldData(field, fallbackNoteIndex) {
         const index = getFieldIndex(field);
         let id = ctx.byIndex.get(index);
         if (!id) {
@@ -244,10 +244,15 @@
             return null;
         }
         const code = P.toHTTPFieldCode(field.Code.Text);
-        const noteIndex = P.getNoteIndex(
-            code,
-            isFootnoteField(field) ? 1 : (isEndnoteField(field) ? 2 : 0)
-        );
+        // The actual location is authoritative. This also repairs documents
+        // written by older versions that stored the note type (1/2) instead
+        // of the real note number in properties.noteIndex.
+        const noteIndex = typeof fallbackNoteIndex === 'number'
+            ? fallbackNoteIndex
+            : P.getNoteIndex(
+                code,
+                isFootnoteField(field) ? 1 : (isEndnoteField(field) ? 2 : 0)
+            );
         return {
             id: id,
             code: code,
@@ -255,12 +260,6 @@
             adjacent: isAdjacent(field),
             noteIndex: noteIndex
         };
-    }
-
-    function collectOrderedFields(doc) {
-        return collectFieldRefs(doc)
-            .filter(function (ref) { return P.isZoteroFieldCode(ref.field.Code.Text); })
-            .map(function (ref) { return ref.field; });
     }
 
     function begin(docId, doc) {
@@ -291,7 +290,8 @@
         for (let i = 0; i < fields.length; i++) {
             const field = fields[i];
             try {
-                if (field.Code.Text === P.TEMP && field.Result.Text === P.TEMP_TEXT) {
+                if (P.toHTTPFieldCode(field.Code.Text) === P.TEMP
+                        && field.Result.Text === P.TEMP_TEXT) {
                     unregisterByIndex(field.Index);
                     field.Delete();
                 }
@@ -415,6 +415,25 @@
     }
 
     function getNoteForField(field) {
+        if (ctx) {
+            const locator = ctx.locators.get(getFieldIndex(field));
+            if (locator && locator.story !== 'main') {
+                try {
+                    const notes = locator.story === 'footnote'
+                        ? ctx.doc.Footnotes : ctx.doc.Endnotes;
+                    const note = notes.Item(locator.noteIndex);
+                    const noteRange = note.Range;
+                    if (field.Result.Start >= noteRange.Start
+                            && field.Result.End <= noteRange.End) {
+                        return {
+                            type: locator.story === 'footnote' ? 1 : 2,
+                            note: note
+                        };
+                    }
+                }
+                catch (e) {}
+            }
+        }
         try {
             if (field.Result.Footnotes && field.Result.Footnotes.Count > 0) {
                 return { type: 1, note: field.Result.Footnotes.Item(1) };
@@ -443,18 +462,53 @@
         throw new Error(U.t('wps.error.unsupportedNoteType', { type: noteType }));
     }
 
+    function isInNoteStory(range, noteType) {
+        try {
+            const story = range.StoryType;
+            if (noteType === 1) {
+                return story === (E().wdFootnotesStory || 2);
+            }
+            if (noteType === 2) {
+                return story === (E().wdEndnotesStory || 3);
+            }
+        }
+        catch (e) {}
+        return false;
+    }
+
+    function findNoteIndex(doc, range, noteType) {
+        try {
+            const notes = noteType === 1 ? doc.Footnotes
+                : noteType === 2 ? doc.Endnotes : null;
+            if (!notes || !range) {
+                return 0;
+            }
+            for (let i = 1; i <= notes.Count; i++) {
+                const noteRange = notes.Item(i).Range;
+                if (range.Start >= noteRange.Start && range.End <= noteRange.End) {
+                    return i;
+                }
+            }
+        }
+        catch (e) {}
+        return 0;
+    }
+
     function insertField(docId, noteType, insertRange) {
         const doc = ctx.doc;
         noteType = Number(noteType) || 0;
-        if (noteType > 2) {
-            noteType = 1;
+        if (noteType !== 0 && noteType !== 1 && noteType !== 2) {
+            throw new Error(U.t('wps.error.unsupportedNoteType', { type: noteType }));
         }
         let range = insertRange || doc.ActiveWindow.Selection.Range;
+        let note = null;
         if (noteType === 1 || noteType === 2) {
             range.Collapse(E().wdCollapseEnd);
-            const note = addNote(doc, noteType, range);
-            U.assert(note, U.t('wps.error.cannotCreateNote'));
-            range = note.Range;
+            if (!isInNoteStory(range, noteType)) {
+                note = addNote(doc, noteType, range);
+                U.assert(note, U.t('wps.error.cannotCreateNote'));
+                range = note.Range;
+            }
         }
         const field = createFieldAt(range);
         const id = registerField(field);
@@ -467,7 +521,9 @@
             }
             catch (e) {}
         }
-        return getFieldData(field);
+        const noteIndex = (note && Number(note.Index))
+            || findNoteIndex(doc, field.Result, noteType);
+        return getFieldData(field, noteIndex);
     }
 
     function setFieldCode(docId, fieldId, code) {
@@ -527,10 +583,13 @@
 
     function getFields(docId) {
         const doc = ctx.doc;
-        const fields = collectOrderedFields(doc);
+        const refs = collectFieldRefs(doc).filter(function (ref) {
+            return P.isZoteroFieldCode(ref.field.Code.Text);
+        });
         const result = [];
-        for (let i = 0; i < fields.length; i++) {
-            const data = getFieldData(fields[i]);
+        for (let i = 0; i < refs.length; i++) {
+            const data = getFieldData(refs[i].field,
+                refs[i].story === 'main' ? 0 : refs[i].noteIndex);
             if (data) {
                 result.push(data);
             }
@@ -613,10 +672,28 @@
         return confirm(text + '\n\n' + U.t('wps.dialog.yesNoCancel2')) ? 1 : 0;
     }
 
+    function noteContainsOnlyField(field, note) {
+        try {
+            const range = note.Range;
+            if (range.Fields.Count > 1) {
+                return false;
+            }
+            const noteText = String(range.Text || '').replace(/[\s\u00a0]/g, '');
+            const fieldText = String(field.Result.Text || '').replace(/[\s\u00a0]/g, '');
+            return noteText === fieldText;
+        }
+        catch (e) {
+            return false;
+        }
+    }
+
     function moveFieldToNote(field, id, targetType) {
         const doc = ctx.doc;
         const current = getNoteForField(field);
-        const code = P.toWPSFieldCode(P.setNoteIndex(field.Code.Text, targetType));
+        const httpCode = P.toHTTPFieldCode(field.Code.Text);
+        const onlyField = current
+            ? noteContainsOnlyField(field, current.note)
+            : false;
         let position;
         if (current) {
             position = current.note.Reference;
@@ -627,18 +704,22 @@
             position.Collapse(E().wdCollapseStart);
         }
         field.Delete();
-        if (current) {
+        if (current && onlyField) {
             current.note.Delete();
         }
 
         let targetRange = position;
-        if (targetType === 1 || targetType === 2) {
-            const note = addNote(doc, targetType, position);
+        let note = null;
+        if ((targetType === 1 || targetType === 2)
+                && !isInNoteStory(position, targetType)) {
+            note = addNote(doc, targetType, position);
             U.assert(note, U.t('wps.error.cannotCreateNote'));
             targetRange = note.Range;
         }
         const newField = createFieldAt(targetRange);
-        newField.Code.Text = code;
+        const noteIndex = (note && Number(note.Index))
+            || findNoteIndex(doc, newField.Result, targetType);
+        newField.Code.Text = P.toWPSFieldCode(P.setNoteIndex(httpCode, noteIndex));
 
         unregisterById(id);
         const newIndex = newField.Index;
@@ -670,6 +751,10 @@
 
     function convertPlaceholdersToFields(docId, placeholderIds, noteType) {
         const doc = ctx.doc;
+        noteType = Number(noteType) || 0;
+        if (noteType !== 0 && noteType !== 1 && noteType !== 2) {
+            throw new Error(U.t('wps.error.unsupportedNoteType', { type: noteType }));
+        }
         const ids = new Set(placeholderIds);
         const links = [];
         for (let i = 1; i <= doc.Hyperlinks.Count; i++) {
@@ -700,15 +785,22 @@
             if (!ids.has(placeholderId)) {
                 continue;
             }
-            const doc = link.Range.Document;
+            const linkDoc = link.Range.Document;
             const text = link.TextToDisplay;
             link.Range.Select();
-            const selection = doc.ActiveWindow.Selection;
+            const selection = linkDoc.ActiveWindow.Selection;
             link.Delete();
             selection.TypeBackspace();
             selection.Collapse(E().wdCollapseStart);
-            const position = selection.Start;
-            const field = createFieldAt(doc.Range(position, position));
+            let targetRange = selection.Range;
+            let note = null;
+            if ((noteType === 1 || noteType === 2)
+                    && !isInNoteStory(targetRange, noteType)) {
+                note = addNote(linkDoc, noteType, targetRange);
+                U.assert(note, U.t('wps.error.cannotCreateNote'));
+                targetRange = note.Range;
+            }
+            const field = createFieldAt(targetRange);
             if (text) {
                 try {
                     field.Result.Text = text;
@@ -718,7 +810,9 @@
             unregisterById(placeholderId);
             ctx.byIndex.set(field.Index, placeholderId);
             ctx.byId.set(placeholderId, field.Index);
-            const data = getFieldData(field);
+            const noteIndex = (note && Number(note.Index))
+                || findNoteIndex(linkDoc, field.Result, noteType);
+            const data = getFieldData(field, noteIndex);
             if (data) {
                 result.push(data);
             }
@@ -756,7 +850,7 @@
         if (!P.isZoteroFieldCode(field.Code.Text)) {
             return false;
         }
-        if (field.Code.Text === P.TEMP) {
+        if (P.toHTTPFieldCode(field.Code.Text) === P.TEMP) {
             return false;
         }
         const range = field.Result;
@@ -782,14 +876,12 @@
             if (code.indexOf('ITEM ') !== 0 && code.indexOf('BIBL ') !== 0) {
                 return false;
             }
-            const doc = link.Range.Document;
             link.Range.Select();
-            const selection = doc.ActiveWindow.Selection;
+            const selection = link.Range.Document.ActiveWindow.Selection;
             link.Delete();
             selection.TypeBackspace();
             selection.Collapse(E().wdCollapseStart);
-            const position = selection.Start;
-            const field = createFieldAt(doc.Range(position, position));
+            const field = createFieldAt(selection.Range);
             field.Code.Text = P.toWPSFieldCode(code);
             field.Result.Text = P.TEMP_TEXT;
             return true;
@@ -847,12 +939,16 @@
             return false;
         }
 
-        let data = null;
+        // The custom document property is less likely to be truncated than
+        // the trailing hyperlink, so prefer it and only fall back to the link.
+        let data = getDocProperty(doc, P.DOC_DATA_PROP) || null;
         for (let i = doc.Hyperlinks.Count; i > 0; i--) {
             const link = doc.Hyperlinks.Item(i);
             const text = link.TextToDisplay || '';
             if (text.indexOf(P.EXPORTED_PREF_HEAD) === 0) {
-                data = text.substring(P.EXPORTED_PREF_HEAD.length);
+                if (data == null) {
+                    data = text.substring(P.EXPORTED_PREF_HEAD.length);
+                }
                 try {
                     link.Range.Select();
                     const selection = doc.ActiveWindow.Selection;
@@ -864,11 +960,6 @@
                 }
                 break;
             }
-        }
-        if (data == null) {
-            // Fallback for documents where the trailing data hyperlink was
-            // truncated: the document data property is still present.
-            data = getDocProperty(doc, P.DOC_DATA_PROP) || null;
         }
         if (data != null) {
             setDocProperty(doc, P.DOC_DATA_PROP, data);
@@ -885,10 +976,19 @@
             const selection = doc.ActiveWindow.Selection;
             selection.Start = 0;
             selection.End = 0;
+            let validStart = false;
             if (bodyStart > 0 && bodyStart <= doc.Content.End) {
+                try {
+                    const header = doc.Range(0, bodyStart).Text || '';
+                    validStart = header.indexOf(P.EXPORTED_DOCUMENT_MARKER) === 0;
+                }
+                catch (e) {}
+            }
+            if (validStart) {
                 selection.End = bodyStart;
             }
             else {
+                // Older exports did not record the body start.
                 selection.MoveEnd(E().wdParagraph, 4);
             }
             selection.TypeBackspace();

@@ -12,6 +12,7 @@ test('recognizes Zotero field codes', () => {
     assert.equal(P.isZoteroFieldCode('BIBL {"bibliography":[]}'), true);
     assert.equal(P.isZoteroFieldCode(' ADDIN ZOTERO_BIBL {"bibliography":[]} '), true);
     assert.equal(P.isZoteroFieldCode('TEMP'), true);
+    assert.equal(P.isZoteroFieldCode(' ADDIN ZOTERO_TEMP '), true);
     assert.equal(P.isZoteroFieldCode('HYPERLINK "https://example.com"'), false);
     assert.equal(P.isZoteroFieldCode('TEMPLATE "Normal.dotm"'), false);
     assert.equal(P.isZoteroFieldCode('TEMPERATURE 20'), false);
@@ -49,10 +50,32 @@ test('translates document data between Http and Field', () => {
     assert.match(P.docDataForZotero(wpsData), /value="Http"/);
 });
 
-test('double-encodes JSON document data for HTTP clients', () => {
-    const json = '{"dataVersion":4,"prefs":{"fieldType":"Http"}}';
-    const encoded = P.docDataForZotero(json);
-    assert.equal(encoded, JSON.stringify(json));
+test('converts JSON document data without double encoding', () => {
+    const httpData = '{"dataVersion":4,"prefs":{"fieldType":"Http"}}';
+    const wpsData = P.docDataForWPS(httpData);
+    assert.deepEqual(JSON.parse(wpsData), {
+        dataVersion: 4,
+        prefs: { fieldType: 'Field' }
+    });
+    assert.deepEqual(JSON.parse(P.docDataForZotero(wpsData)), {
+        dataVersion: 4,
+        prefs: { fieldType: 'Http' }
+    });
+
+    const legacy = JSON.stringify('{"dataVersion":4,"prefs":{"fieldType":"Field"}}');
+    assert.deepEqual(JSON.parse(P.docDataForZotero(legacy)), {
+        dataVersion: 4,
+        prefs: { fieldType: 'Http' }
+    });
+});
+
+test('parses bibliography JSON with the CSL suffix and keeps it when editing', () => {
+    const code = 'BIBL {"bibliography":[{"id":"x"}],"properties":{"noteIndex":0}} CSL_BIBLIOGRAPHY';
+    const parsed = P.parseFieldCode(code);
+    assert.equal(parsed.type, 'bibliography');
+    assert.equal(parsed.json.bibliography[0].id, 'x');
+    assert.equal(P.setNoteIndex(code, 0),
+        'BIBL {"bibliography":[{"id":"x"}],"properties":{"noteIndex":0}} CSL_BIBLIOGRAPHY');
 });
 
 test('splits long document properties into 255-character chunks', () => {

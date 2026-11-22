@@ -75,9 +75,9 @@ TEMP
 
 转换逻辑在 `src/shared/protocol.js`：
 
-- `toHTTPFieldCode()`：去掉 `ADDIN ZOTERO_` 前缀；
-- `toWPSFieldCode()`：添加 `ADDIN ZOTERO_` 前缀和首尾空格；
-- `{}` 与 `TEMP` 都视为临时域。
+- `toHTTPFieldCode()`：去掉通用 `ADDIN ZOTERO_` 前缀（含 `ADDIN ZOTERO_TEMP`）；
+- `toWPSFieldCode()`：为引文/参考文献添加 `ADDIN ZOTERO_` 前缀和首尾空格；
+- `{}`、`TEMP` 与 `ADDIN ZOTERO_TEMP` 都视为临时域。
 
 ## 文档数据
 
@@ -87,7 +87,7 @@ Zotero 通过 `Document.getDocumentData` / `setDocumentData` 读写一段字符�
 - 插件把它按 255 字符分段写入 `ZOTERO_PREF_1`、`ZOTERO_PREF_2`…；
 - 读回时按属性顺序拼接；
 - `value="Http"`（HTTP 客户端）与 `value="Field"`（Word）互相转换；
-- 如果收到 JSON 格式的文档数据，会按 Google Docs 客户端的习惯做一次字符串编码。
+- JSON 格式的文档数据会解析后改写 `prefs.fieldType`，再以单层 JSON 字符串保存/返回，不做二次编码；旧版本遗留的双层编码也会被识别。
 
 ## 域 ID
 
@@ -96,7 +96,8 @@ Zotero 只要求域 ID 在一次事务内稳定。实现使用 WPS `Field.Index`
 - 事务开始时扫描全文，登记所有 Zotero 域；
 - 新建域时分配随机 ID；
 - `convertPlaceholdersToFields` 使用占位符 ID 作为域 ID；
-- 事务结束后丢弃映射（WPS 的 Field 对象不能长期持有）。
+- 事务结束后丢弃映射（WPS 的 Field 对象不能长期持有）；
+- 引文 JSON 中的 `noteIndex` 使用真实注释序号：正文为 0，脚注/尾注为 1-based 序号。
 
 ## 富文本
 
