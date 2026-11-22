@@ -118,6 +118,26 @@ npm test
 7. 解除链接，确认文字保留、域消失。
 8. 用 Microsoft Word 打开同一 `.docx`，确认 Word 的 Zotero 插件可以刷新。
 
+## 仓库与镜像
+
+- **主仓库：Gitee** <https://gitee.com/ckern/zotero-wps-bridge>
+- **GitHub 只读镜像** <https://github.com/ckern-cn/zotero-wps-bridge>
+- Issue、PR、Tag、Release 均以 Gitee 为准；不要在两个仓库重复提交。
+
+本地 remote 约定：
+
+```text
+origin  -> Gitee（主仓库）
+github  -> GitHub（只读镜像）
+```
+
+同步命令：
+
+```bash
+git push origin main
+git push github main
+```
+
 ## 发布
 
 1. 修改 `package.json` 的 `version`，并同步 `manifest.json`、`zotero-wps.js`、`config.js`、`app.js` 回退值、文档版本号和 `CHANGELOG.md`。

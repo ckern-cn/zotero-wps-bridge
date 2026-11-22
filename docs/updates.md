@@ -4,6 +4,8 @@
 >
 > 官方更新清单：`https://zw.ckern.cn/updates.json`
 >
+> 源码主仓库：Gitee `https://gitee.com/ckern/zotero-wps-bridge`；GitHub 为只读镜像。
+>
 > 只有项目所有者，或由项目所有者明确授权的维护者，可以发布官方版本。发布权与品牌规则见 [`../GOVERNANCE.md`](../GOVERNANCE.md) 和 [`../TRADEMARK.md`](../TRADEMARK.md)。
 
 ## 结论

@@ -1,3 +1,7 @@
+> [!IMPORTANT]
+> GitHub 是只读镜像，不接受独立 PR。请在 Gitee 主仓库提交：
+> https://gitee.com/ckern/zotero-wps-bridge
+
 ## 这个 PR 做了什么
 
 <!-- 简要说明改动和动机。 -->

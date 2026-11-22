@@ -23,7 +23,7 @@
    - `CNAME`
    - `scripts/build-site.js` 中的默认 `SITE_URL`
 
-仓库地址已配置为 `https://github.com/ckern-cn/zotero-wps-bridge`，Gitee 镜像为 `https://gitee.com/ckern/zotero-wps-bridge`。
+仓库地址已配置为 Gitee 主仓库 `https://gitee.com/ckern/zotero-wps-bridge`，GitHub 只读镜像 `https://github.com/ckern-cn/zotero-wps-bridge`。
 
 ## 构建与预览
 

@@ -1,1 +1,5 @@
-blank_issues_enabled: true
+blank_issues_enabled: false
+contact_links:
+  - name: Gitee 主仓库 Issues
+    url: https://gitee.com/ckern/zotero-wps-bridge/issues
+    about: 请在 Gitee 主仓库提交 bug 和功能请求；GitHub 是只读镜像。

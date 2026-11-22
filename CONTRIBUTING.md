@@ -2,6 +2,13 @@
 
 感谢你愿意改进 **Zotero WPS Bridge**。本项目希望把贡献门槛尽量压低：不需要 CLA，不需要版权转让，也不要求你先成为“核心成员”。
 
+## 仓库与提交位置
+
+- **主仓库：Gitee** <https://gitee.com/ckern/zotero-wps-bridge>
+- **GitHub 只读镜像** <https://github.com/ckern-cn/zotero-wps-bridge>
+
+请在 **Gitee** 提交 Issue 和 Pull Request。GitHub 镜像不接受独立贡献，避免两个仓库的讨论、DCO 记录和发布状态分裂。不要在两个仓库重复提交同一个 Issue / PR。
+
 ## 可以贡献什么
 
 - 复现并报告 bug
@@ -14,9 +21,9 @@
 
 ## 开始之前
 
-- **小修复、文档、翻译**：可以直接提交 Pull Request。
-- **较大的功能、协议变更、安装器/权限/更新机制改动**：请先开 issue 说明目标和方案，避免重复劳动。
-- **安全漏洞**：不要公开开 issue，请按 [`SECURITY.md`](SECURITY.md) 私密报告。
+- **小修复、文档、翻译**：可以直接在 Gitee 提交 Pull Request。
+- **较大的功能、协议变更、安装器/权限/更新机制改动**：请先在 Gitee 开 issue 说明目标和方案，避免重复劳动。
+- **安全漏洞**：不要在任一仓库公开开 issue，请按 [`SECURITY.md`](SECURITY.md) 私密报告。
 
 ## 开发环境
 

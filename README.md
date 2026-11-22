@@ -4,9 +4,9 @@
 
 > 官方网站（简体中文 / English）：<https://zw.ckern.cn/>
 >
-> GitHub：<https://github.com/ckern-cn/zotero-wps-bridge>
+> Gitee（主仓库）：<https://gitee.com/ckern/zotero-wps-bridge>
 >
-> Gitee 镜像：<https://gitee.com/ckern/zotero-wps-bridge>
+> GitHub（只读镜像）：<https://github.com/ckern-cn/zotero-wps-bridge>
 >
 > 源码、安装包和更新清单均以官方站点与仓库发布页为准。
 
@@ -238,9 +238,13 @@ CODE_OF_CONDUCT.md          # 行为准则
 - 手动安装独立 WPS 加载项时，`ribbon.xml` 默认为英文；需要本地化功能区时请使用 Zotero 的“安装 / 修复 WPS 加载项”。
 - WPS 运行时会占用加载项目录；安装/更新后总是需要重启 WPS 才能生效。
 
-## 参与贡献
+## 仓库与贡献
 
-欢迎报告 bug、改进文档、补充翻译、增加测试或提交代码。小修复可以直接开 PR；较大的改动建议先开 issue。
+**Gitee 是主仓库**：代码、Issue、PR、Tag 和 Release 以 Gitee 为准。
+
+**GitHub 是只读镜像**：用于海外访问和备份，不在 GitHub 接受独立 Issue / PR。
+
+欢迎在 Gitee 报告 bug、改进文档、补充翻译、增加测试或提交代码。小修复可以直接开 PR；较大的改动建议先开 issue。请勿在两个仓库重复提交同一 Issue 或 PR。
 
 - 贡献指南：[`CONTRIBUTING.md`](CONTRIBUTING.md)
 - 行为准则：[`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)

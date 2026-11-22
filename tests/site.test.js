@@ -62,7 +62,7 @@ test('both landing pages contain the key sections and download hooks', () => {
         }
         assert.match(html, /data-version/);
         assert.match(html, /data-link="repo"/);
-        assert.match(html, /data-link="gitee"/);
+        assert.match(html, /data-link="github"/);
     }
 });
 
@@ -109,10 +109,12 @@ test('donation QR images are bundled with the site', () => {
 test('site configuration points at the official domain and downloadable files', () => {
     const config = read('config.js');
     assert.match(config, /domain:\s*'https:\/\/zw\.ckern\.cn'/);
+    assert.match(config, /repo:\s*'https:\/\/gitee\.com\/ckern\/zotero-wps-bridge'/);
+    assert.match(config, /issues:\s*'https:\/\/gitee\.com\/ckern\/zotero-wps-bridge\/issues'/);
+    assert.match(config, /github:\s*'https:\/\/github\.com\/ckern-cn\/zotero-wps-bridge'/);
     assert.match(config, /xpi:\s*'\/downloads\/zotero-wps-bridge-latest\.xpi'/);
     assert.match(config, /zip:\s*'\/downloads\/zotero-wps-bridge-addon-latest\.zip'/);
     assert.match(config, /updates:\s*'\/updates\.json'/);
-    assert.match(config, /gitee:\s*'https:\/\/gitee\.com\/ckern\/zotero-wps-bridge'/);
 });
 
 test('generated version and update manifests match the current release', () => {

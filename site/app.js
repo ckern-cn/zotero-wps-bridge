@@ -19,8 +19,8 @@
 
     /* Static links that are centralised in config.js. */
     const linkKeys = [
-        'repo', 'gitee', 'releases', 'issues', 'changelog', 'license',
-        'security', 'donate', 'updates'
+        'repo', 'gitee', 'github', 'releases', 'issues', 'changelog',
+        'license', 'security', 'donate', 'updates'
     ];
     for (const key of linkKeys) {
         for (const element of $$('[data-link="' + key + '"]')) {
