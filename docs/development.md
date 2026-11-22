@@ -125,6 +125,32 @@ npm test
 3. 上传 `dist/zotero-wps-bridge-<version>.xpi` 和 `dist/SHA256SUMS.txt`。
 4. Zotero 插件更新时，`ensureInstalled()` 会检测版本并替换 WPS 加载项目录。
 
+## 不要提交的内容
+
+以下内容只应留在本地，远程仓库已通过 `.gitignore` 排除：
+
+- `pay/`：支付 App 原始截图，可能包含手机界面、收款人名称等个人信息；只提交裁剪后的公开二维码。
+- `ref/`：菜单参考图，仅供本地设计参考。
+- `dist/`、`build/`：构建产物；XPI/ZIP 通过 Release 或官网分发。
+- `site/downloads/`：安装包和校验和；部署前由 `npm run build:site` 生成。
+- `*.log`、`.env*`、`*.pem`、`*.key`、`*.p12`、数据库文件：日志、凭据和本地状态。
+- 任何真实 token、密码、API key、个人邮箱或本机绝对路径。
+
+捐赠二维码是**公开资产**，会随官网和插件分发，因此提交在
+`site/assets/donate/`、`src/wps-addon/images/donate-*.png` 和
+`src/zotero-plugin/content/donate/`。Fork 必须替换为自己的收款码，或移除捐赠入口。
+
+`src/wps-addon/js/config.js` 中的 token 必须保持空字符串；真实 token 只由 Zotero
+在安装时写入本地加载项目录。
+
+发布前建议检查：
+
+```bash
+git status --ignored
+git grep -nE '/home/|/Users/|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+|BEGIN (RSA|OPENSSH|EC) PRIVATE KEY'
+npm test
+```
+
 ## 注意事项
 
 - 不要在 WPS 运行时删除/覆盖加载项目录后继续使用当前 WPS 会话；需要重启 WPS。
