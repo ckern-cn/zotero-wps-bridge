@@ -69,7 +69,8 @@ test('build embeds every WPS add-in file except the generated config', () => {
     assert.ok(!embedded.includes('js/config.js'));
     for (const name of ['manifest.xml', 'index.html', 'main.js', 'dialog.html',
         'ribbon.xml', 'ribbon-endnote.xml', 'ribbon-zotero.xml',
-        'images/citation.svg', 'js/app.js', 'js/doc.js', 'js/i18n.js',
+        'images/citation.svg', 'images/donate-alipay.png',
+        'images/donate-wechat.png', 'js/app.js', 'js/doc.js', 'js/i18n.js',
         'js/protocol.js', 'js/richtext.js', 'js/util.js', 'js/zotero.js']) {
         assert.ok(embedded.includes(name), name + ' should be embedded');
     }

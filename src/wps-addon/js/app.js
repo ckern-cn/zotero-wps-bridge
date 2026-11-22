@@ -115,17 +115,19 @@
         return width;
     }
 
-    function estimateDialogHeight(body) {
+    function estimateDialogHeight(body, extraHeight) {
         // 560 logical px leaves about 500 px for text after padding; at 14 px
         // this fits roughly 68 half-width characters per line.
         const lines = String(body || '').replace(/\r\n?/g, '\n')
             .split('\n').reduce(function (sum, line) {
-            return sum + Math.max(1, Math.ceil(displayWidth(line) / 68));
-        }, 0);
-        return Math.min(640, Math.max(240, 168 + lines * 24));
+                return sum + Math.max(1, Math.ceil(displayWidth(line) / 68));
+            }, 0);
+        const extra = Number(extraHeight) || 0;
+        const max = extra > 0 ? 680 : 640;
+        return Math.min(max, Math.max(240, 168 + lines * 24 + extra));
     }
 
-    function showMessageDialog(title, body, type) {
+    function showMessageDialog(title, body, type, options) {
         const heading = title || U.t('wps.dialog.noticeTitle');
         const data = {
             title: heading,
@@ -133,6 +135,9 @@
             type: type || 'info',
             closeLabel: U.t('wps.dialog.close')
         };
+        if (options && options.donate) {
+            data.donate = options.donate;
+        }
         try {
             const wpsObject = typeof wps !== 'undefined' ? wps : null;
             const application = window.Application;
@@ -160,7 +165,9 @@
                     page.href,
                     heading,
                     Math.round(560 * scale),
-                    Math.round(estimateDialogHeight(body) * scale),
+                    Math.round(estimateDialogHeight(
+                        body, options && options.donate ? 240 : 0
+                    ) * scale),
                     true,
                     false,
                     2
@@ -184,7 +191,16 @@
         showMessageDialog(
             U.t('wps.dialog.helpTitle'),
             U.t('wps.alert.about', { version: version() }),
-            'info'
+            'info',
+            {
+                donate: {
+                    title: U.t('donate.title'),
+                    copy: U.t('donate.copy'),
+                    note: U.t('donate.note'),
+                    alipay: U.t('donate.alipay'),
+                    wechat: U.t('donate.wechat')
+                }
+            }
         );
     }
 

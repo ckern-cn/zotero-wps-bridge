@@ -87,6 +87,54 @@
         background: #1557b0;
     }
 
+    .zwps-donate {
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .zwps-donate h2 {
+        margin: 0 0 6px;
+        font-size: 16px;
+        line-height: 1.4;
+    }
+
+    .zwps-donate p {
+        margin: 0;
+        color: #5b6b7a;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .zwps-donate-codes {
+        display: flex;
+        gap: 20px;
+        margin-top: 14px;
+    }
+
+    .zwps-donate-code {
+        text-align: center;
+        color: #5b6b7a;
+        font-size: 12px;
+    }
+
+    .zwps-donate-code img {
+        display: block;
+        width: 104px;
+        height: 104px;
+        margin: 0 auto 5px;
+        padding: 4px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #fff;
+    }
+
+    .zwps-donate-note {
+        margin-top: 12px !important;
+        color: #8a97a4 !important;
+        font-size: 11px !important;
+    }
+
     @media (prefers-color-scheme: dark) {
         body {
             background: #1b1b1f;
@@ -105,6 +153,23 @@
         .zwps-dialog button:hover {
             background: #2563eb;
         }
+
+        .zwps-donate {
+            border-top-color: #4a4a51;
+        }
+
+        .zwps-donate p,
+        .zwps-donate-code {
+            color: #b9b9c0;
+        }
+
+        .zwps-donate-code img {
+            border-color: #4a4a51;
+        }
+
+        .zwps-donate-note {
+            color: #a0a0a8 !important;
+        }
     }
 </style>
 </head>
@@ -112,6 +177,21 @@
     <main class="zwps-dialog" id="dialog">
         <h1 id="title">Zotero WPS Bridge</h1>
         <pre id="body"></pre>
+        <section class="zwps-donate" id="donate" hidden>
+            <h2 id="donate-title"></h2>
+            <p id="donate-copy"></p>
+            <div class="zwps-donate-codes">
+                <div class="zwps-donate-code">
+                    <img id="donate-alipay-img" src="images/donate-alipay.png" alt=""/>
+                    <span id="donate-alipay"></span>
+                </div>
+                <div class="zwps-donate-code">
+                    <img id="donate-wechat-img" src="images/donate-wechat.png" alt=""/>
+                    <span id="donate-wechat"></span>
+                </div>
+            </div>
+            <p class="zwps-donate-note" id="donate-note"></p>
+        </section>
         <div class="zwps-dialog-actions">
             <button id="close" type="button" autofocus>Close</button>
         </div>
@@ -171,6 +251,18 @@
     document.getElementById('body').textContent = data.body || '';
     document.getElementById('close').textContent = data.closeLabel || 'Close';
     document.title = data.title || 'Zotero WPS Bridge';
+
+    if (data.donate) {
+        var donate = data.donate;
+        document.getElementById('donate-title').textContent = donate.title || '';
+        document.getElementById('donate-copy').textContent = donate.copy || '';
+        document.getElementById('donate-note').textContent = donate.note || '';
+        document.getElementById('donate-alipay').textContent = donate.alipay || '';
+        document.getElementById('donate-wechat').textContent = donate.wechat || '';
+        document.getElementById('donate-alipay-img').alt = donate.alipay || '';
+        document.getElementById('donate-wechat-img').alt = donate.wechat || '';
+        document.getElementById('donate').hidden = false;
+    }
 
     function close() {
         try {

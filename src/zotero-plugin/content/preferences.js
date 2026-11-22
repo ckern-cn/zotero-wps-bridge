@@ -150,7 +150,27 @@
         setText('zwps-help-4', T('zotero.prefs.help4'));
         setText('zwps-note', T('zotero.prefs.note'));
         setText('zwps-studio', T('zotero.prefs.studio'));
-        setText('zwps-donate', T('zotero.prefs.donate'));
+        setText('zwps-donate-title', T('donate.title'));
+        setText('zwps-donate-copy', T('donate.copy'));
+        setText('zwps-donate-note', T('donate.note'));
+        setText('zwps-donate-alipay', T('donate.alipay'));
+        setText('zwps-donate-wechat', T('donate.wechat'));
+        const p = plugin();
+        const base = p && p.rootURI ? p.rootURI + 'content/donate/' : '';
+        const alipayQr = el('zwps-donate-alipay-img');
+        if (alipayQr) {
+            alipayQr.setAttribute('alt', T('donate.alipay'));
+            if (base) {
+                alipayQr.src = base + 'alipay-qr.png';
+            }
+        }
+        const wechatQr = el('zwps-donate-wechat-img');
+        if (wechatQr) {
+            wechatQr.setAttribute('alt', T('donate.wechat'));
+            if (base) {
+                wechatQr.src = base + 'wechat-qr.png';
+            }
+        }
         setText('zwps-reset-token', T('zotero.prefs.resetToken'));
         setText('zwps-reset-hint', T('zotero.prefs.resetHint'));
 
@@ -388,19 +408,6 @@
                 }
                 try {
                     Zotero.launchFile(Zotero.File.pathToFile(lastStatus.dirs[0].path));
-                }
-                catch (e) {
-                    Zotero.logError(e);
-                }
-            });
-        }
-
-        const donate = el('zwps-donate');
-        if (donate) {
-            donate.addEventListener('click', function (event) {
-                event.preventDefault();
-                try {
-                    Zotero.launchURL('https://zw.ckern.cn/#donate');
                 }
                 catch (e) {
                     Zotero.logError(e);

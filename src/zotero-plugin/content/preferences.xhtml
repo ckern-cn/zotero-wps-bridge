@@ -81,13 +81,28 @@
 
         <html:p id="zwps-note" class="zwps-note"></html:p>
         <html:p id="zwps-studio" class="zwps-studio"></html:p>
-        <html:p class="zwps-donate">
-            <html:a id="zwps-donate" href="https://zw.ckern.cn/#donate">Support the project · Donate</html:a>
-        </html:p>
 
         <html:div class="zwps-footer">
             <html:button id="zwps-reset-token" type="button" class="zwps-danger">Reset Access Token</html:button>
             <html:span id="zwps-reset-hint" class="zwps-hint"></html:span>
+        </html:div>
+
+        <html:div class="zwps-donate-card">
+            <html:p id="zwps-donate-title" class="zwps-donate-title"></html:p>
+            <html:p id="zwps-donate-copy" class="zwps-donate-copy"></html:p>
+            <html:div class="zwps-donate-codes">
+                <html:div class="zwps-donate-code">
+                    <html:img id="zwps-donate-alipay-img"
+                              src="donate/alipay-qr.png" width="132" height="132" alt=""/>
+                    <html:span id="zwps-donate-alipay"></html:span>
+                </html:div>
+                <html:div class="zwps-donate-code">
+                    <html:img id="zwps-donate-wechat-img"
+                              src="donate/wechat-qr.png" width="132" height="132" alt=""/>
+                    <html:span id="zwps-donate-wechat"></html:span>
+                </html:div>
+            </html:div>
+            <html:p id="zwps-donate-note" class="zwps-donate-note"></html:p>
         </html:div>
     </html:div>
 </vbox>

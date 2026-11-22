@@ -77,7 +77,8 @@ test('required file list covers the complete standalone add-on', () => {
     assert.equal(new Set(files).size, files.length);
     for (const name of ['manifest.xml', 'index.html', 'main.js', 'dialog.html',
         'ribbon.xml', 'ribbon-endnote.xml', 'ribbon-zotero.xml',
-        'images/citation.svg', 'js/app.js', 'js/config.js', 'js/doc.js',
+        'images/citation.svg', 'images/donate-alipay.png',
+        'images/donate-wechat.png', 'js/app.js', 'js/config.js', 'js/doc.js',
         'js/i18n.js', 'js/protocol.js', 'js/richtext.js', 'js/util.js',
         'js/zotero.js']) {
         assert.ok(files.includes(name), name + ' should be required');

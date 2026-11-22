@@ -912,6 +912,8 @@ var ZoteroWPS = {
             'images/annotation.svg',
             'images/bibliography.svg',
             'images/citation.svg',
+            'images/donate-alipay.png',
+            'images/donate-wechat.png',
             'images/explorer.svg',
             'images/export.svg',
             'images/info.svg',
