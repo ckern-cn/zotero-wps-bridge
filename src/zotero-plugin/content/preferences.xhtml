@@ -11,6 +11,13 @@
 
         <html:div id="zwps-warning" class="zwps-warning" hidden="hidden"></html:div>
 
+        <html:div class="zwps-actions zwps-actions-primary">
+            <html:button id="zwps-install" type="button">Install / Repair WPS Add-in</html:button>
+            <html:button id="zwps-uninstall" type="button" class="zwps-danger">Uninstall WPS Add-in</html:button>
+            <html:button id="zwps-refresh" type="button" class="zwps-secondary">Refresh Status</html:button>
+        </html:div>
+        <html:p id="zwps-uninstall-hint" class="zwps-hint"></html:p>
+
         <html:div class="zwps-card">
             <html:div class="zwps-row">
                 <html:span id="zwps-status-label" class="zwps-label">Status</html:span>
@@ -30,10 +37,7 @@
             </html:div>
         </html:div>
 
-        <html:div class="zwps-actions">
-            <html:button id="zwps-install" type="button">Install / Repair WPS Add-in</html:button>
-            <html:button id="zwps-uninstall" type="button" class="zwps-secondary">Uninstall</html:button>
-            <html:button id="zwps-refresh" type="button" class="zwps-secondary">Refresh Status</html:button>
+        <html:div class="zwps-actions zwps-actions-secondary">
             <html:button id="zwps-open-dir" type="button" class="zwps-secondary">Open Folder</html:button>
             <html:button id="zwps-force-reset" type="button" class="zwps-danger">Force Reset Stuck Transaction</html:button>
         </html:div>

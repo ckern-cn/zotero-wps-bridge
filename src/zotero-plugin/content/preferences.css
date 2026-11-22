@@ -66,6 +66,19 @@
     margin: 14px 0;
 }
 
+.zwps-actions-primary {
+    margin-top: 10px;
+    margin-bottom: 6px;
+}
+
+.zwps-actions-secondary {
+    margin-top: 4px;
+}
+
+#zwps-uninstall-hint {
+    margin: 0 0 12px 0;
+}
+
 .zwps-actions button,
 .zwps-footer button {
     padding: 5px 14px;

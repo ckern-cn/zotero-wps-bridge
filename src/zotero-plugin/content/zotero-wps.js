@@ -14,7 +14,7 @@ var ZoteroWPSGlobal = this;
 
 var ZoteroWPS = {
     id: null,
-    version: '0.2.1',
+    version: '0.2.2',
     rootURI: null,
     token: null,
     addonFiles: null,

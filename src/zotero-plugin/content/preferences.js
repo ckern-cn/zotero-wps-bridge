@@ -55,6 +55,7 @@
         setText('zwps-paths-label', T('zotero.prefs.pathsLabel'));
         setText('zwps-install', T('zotero.prefs.install'));
         setText('zwps-uninstall', T('zotero.prefs.uninstall'));
+        setText('zwps-uninstall-hint', T('zotero.prefs.uninstallHint'));
         setText('zwps-refresh', T('zotero.prefs.refresh'));
         setText('zwps-open-dir', T('zotero.prefs.openDir'));
         setText('zwps-force-reset', T('zotero.prefs.forceReset'));
