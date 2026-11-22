@@ -20,7 +20,7 @@
         }
         const candidates = [];
         try {
-            if (navigator.languages) {
+            if (navigator.languages && navigator.languages.length) {
                 candidates.push.apply(candidates, navigator.languages);
             }
             else if (navigator.language) {
@@ -74,13 +74,20 @@
         if (p) {
             const value = p.t(key, params);
             if (value && value !== key) {
-                const detected = detectPaneLocale();
-                if ((detected === 'zh-CN' || detected === 'zh-TW')
-                        && typeof p.getLocale === 'function'
-                        && !/^zh/i.test(p.getLocale())) {
-                    const localValue = paneT(key, params);
-                    if (localValue && localValue !== key) {
-                        return localValue;
+                // If the user explicitly chose a language, the pane must follow
+                // that choice. The pane-level fallback below is only for the
+                // "automatic" mode, where Zotero can report en-US even though
+                // the visible UI is Chinese.
+                const explicit = p.localeOverride && p.localeOverride !== 'auto';
+                if (!explicit) {
+                    const detected = detectPaneLocale();
+                    if ((detected === 'zh-CN' || detected === 'zh-TW')
+                            && typeof p.getLocale === 'function'
+                            && !/^zh/i.test(p.getLocale())) {
+                        const localValue = paneT(key, params);
+                        if (localValue && localValue !== key) {
+                            return localValue;
+                        }
                     }
                 }
                 return value;
@@ -122,6 +129,7 @@
         setText('zwps-title', T('zotero.prefs.title'));
         setText('zwps-intro', T('zotero.prefs.intro'));
         setText('zwps-status-label', T('zotero.prefs.statusLabel'));
+        setText('zwps-status', T('zotero.prefs.reading'), 'zwps-value');
         setText('zwps-port-label', T('zotero.prefs.portLabel'));
         setText('zwps-token-label', T('zotero.prefs.tokenLabel'));
         setText('zwps-paths-label', T('zotero.prefs.pathsLabel'));
@@ -312,12 +320,25 @@
     }
 
     function confirmDialog(text, button0) {
-        return Zotero.Prompt.confirm({
-            title: 'Zotero WPS Bridge',
-            text: text,
-            button0: button0,
-            button1: T('zotero.prefs.cancel')
-        }) === 0;
+        try {
+            if (Zotero.Prompt && typeof Zotero.Prompt.confirm === 'function') {
+                return Zotero.Prompt.confirm({
+                    title: 'Zotero WPS Bridge',
+                    text: text,
+                    button0: button0,
+                    button1: T('zotero.prefs.cancel')
+                }) === 0;
+            }
+        }
+        catch (e) {
+            Zotero.logError(e);
+        }
+        try {
+            return confirm(text);
+        }
+        catch (e) {
+            return false;
+        }
     }
 
     function bind() {
@@ -396,6 +417,12 @@
                     await refresh();
                     Zotero.alert(null, 'Zotero WPS Bridge', T('zotero.prefs.languageChanged'));
                 }
+                catch (e) {
+                    Zotero.logError(e);
+                    Zotero.alert(null, 'Zotero WPS Bridge', T('zotero.prefs.changeFailed', {
+                        message: e.message || String(e)
+                    }));
+                }
                 finally {
                     language.disabled = false;
                 }
@@ -411,6 +438,12 @@
                     await refresh();
                     Zotero.alert(null, 'Zotero WPS Bridge',
                         T('zotero.prefs.ribbonLayoutChanged'));
+                }
+                catch (e) {
+                    Zotero.logError(e);
+                    Zotero.alert(null, 'Zotero WPS Bridge', T('zotero.prefs.changeFailed', {
+                        message: e.message || String(e)
+                    }));
                 }
                 finally {
                     ribbonLayout.disabled = false;

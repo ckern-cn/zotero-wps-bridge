@@ -40,7 +40,7 @@
         const value = toHTTPFieldCode(code);
         return value.indexOf(CITATION) === 0
             || value.indexOf(BIBLIOGRAPHY) === 0
-            || value.indexOf(TEMP) === 0;
+            || value === TEMP;
     }
 
     function parseFieldCode(code) {
@@ -57,7 +57,7 @@
             type = 'bibliography';
             offset = BIBLIOGRAPHY.length;
         }
-        else if (value.indexOf(TEMP) === 0) {
+        else if (value === TEMP) {
             return { type: 'temp', json: null, offset: TEMP.length, raw: value };
         }
         else {

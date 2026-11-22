@@ -124,15 +124,39 @@
     var key = params.get('key') || '';
     var data = null;
 
+    function storage() {
+        try {
+            if (window.wps && window.wps.PluginStorage) {
+                return window.wps.PluginStorage;
+            }
+            if (window.Application && window.Application.PluginStorage) {
+                return window.Application.PluginStorage;
+            }
+        }
+        catch (e) {}
+        return null;
+    }
+
     try {
-        var raw = window.wps && window.wps.PluginStorage
-            ? window.wps.PluginStorage.getItem(key)
-            : null;
+        var store = storage();
+        var raw = store && key ? store.getItem(key) : null;
         if (raw) {
             data = JSON.parse(raw);
         }
     }
     catch (e) {}
+
+    // ShowDialog pages do not always expose the wps object. app.js also puts
+    // the payload in the URL so the dialog still renders in that case.
+    if (!data) {
+        try {
+            var payload = params.get('payload');
+            if (payload) {
+                data = JSON.parse(payload);
+            }
+        }
+        catch (e) {}
+    }
 
     data = data || {
         title: 'Zotero WPS Bridge',
@@ -150,9 +174,9 @@
 
     function close() {
         try {
-            if (window.wps && window.wps.PluginStorage
-                    && typeof window.wps.PluginStorage.removeItem === 'function') {
-                window.wps.PluginStorage.removeItem(key);
+            var store = storage();
+            if (store && key && typeof store.removeItem === 'function') {
+                store.removeItem(key);
             }
         }
         catch (e) {}

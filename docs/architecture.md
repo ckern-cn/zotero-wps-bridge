@@ -70,10 +70,11 @@ Zotero 的本地 HTTP 服务默认会拒绝来自“浏览器”的请求（WPS 
 
 | 路径 | 方法 | 令牌 | 说明 |
 | --- | --- | --- | --- |
-| `/wps/ping` | GET/POST | 否 | 健康检查、版本、端口 |
+| `/wps/ping` | GET/POST | 否 | 健康检查、版本、端口、界面语言 |
 | `/wps/status` | GET/POST | 否 | 是否有事务进行中 |
 | `/wps/execCommand` | POST | 是 | 开始一个引用事务 |
 | `/wps/respond` | POST | 是 | 回复 Zotero 的文字处理器命令 |
+| `/wps/layout` | POST | 是 | 切换 Ribbon 布局并重写加载项 |
 | `/wps/reset` | POST | 是 | 强制清理卡住的事务 |
 
 ## CORS
@@ -97,11 +98,12 @@ Zotero 的 `RequestHandler` 默认只对 `https://www.zotero.org` 返回 CORS �
       port: 23119,
       token: "...",
       locale: "zh-CN",
-      addonVersion: "0.2.9"
+      ribbonLayout: "current",
+      addonVersion: "0.2.10"
   };
   ```
 
-- 所有 `/wps/execCommand`、`/wps/respond`、`/wps/reset` 请求都在 JSON 体中携带令牌。
+- 所有 `/wps/execCommand`、`/wps/respond`、`/wps/layout`、`/wps/reset` 请求都在 JSON 体中携带令牌。
 - 令牌只防止其他本地网页/进程误用桥接接口，不能防御已经能读取用户文件的恶意软件。
 
 ## 文档迁移
@@ -122,9 +124,9 @@ Zotero 的 `RequestHandler` 默认只对 `https://www.zotero.org` 返回 CORS �
 Zotero 插件内嵌了 WPS 加载项文件（`content/wps-addon-files.js`，构建时生成）。安装时：
 
 1. 定位 WPS 的 `jsaddons` 目录；
-2. 删除旧的 `zotero-wps_*` 目录；
-3. 写入 `zotero-wps_<version>/`；
-4. 生成 `js/config.js`（当前端口 + 令牌）；
+2. 先把完整的新版本写入隐藏的临时目录，避免失败时破坏正在使用的旧版本；
+3. 用临时目录替换 `zotero-wps_<version>/`，再删除其他旧版本目录；
+4. 生成 `js/config.js`（当前端口、令牌、语言和布局）；
 5. 幂等更新 `publish.xml`、`jsplugins.xml`、`authwebsite.xml`。
 
 WPS 支持离线加载项目录（`url="zotero-wps_<version>"`），因此不需要本地 Web 服务器来提供加载项文件。

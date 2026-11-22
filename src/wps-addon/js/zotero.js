@@ -70,6 +70,7 @@
 
     Client.prototype.transact = function (command) {
         let indexStarted = false;
+        let txStarted = false;
         try {
             Doc.begin(this.docId, U.getActiveDocument());
             indexStarted = true;
@@ -89,6 +90,7 @@
                     text: response.text || ''
                 }));
             }
+            txStarted = true;
 
             while (response && response.status === 200 && response.json
                     && response.json.command) {
@@ -114,7 +116,12 @@
             return !this.failed;
         }
         catch (e) {
-            this.reset();
+            // Only reset a transaction this client actually started. Resetting
+            // after a 503 busy response would abort the other document's
+            // transaction instead of just reporting the conflict.
+            if (txStarted) {
+                this.reset();
+            }
             throw e;
         }
         finally {

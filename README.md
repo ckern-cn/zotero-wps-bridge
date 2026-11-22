@@ -55,8 +55,8 @@ Linux 完整安装说明（含 deb/rpm、Flatpak/Snap、Wayland、手动安装�
 2. 点击 **安装 / 修复 WPS 加载项**。
 3. 如果 WPS 正在运行，请**完全退出** WPS（包括托盘/后台进程），再重新打开 WPS 文字。
 4. 在 WPS 功能区应该出现 **Zotero** 选项卡。
-5. 界面语言可在同一页的 **界面语言** 中选择“自动 / English / 简体中文 / 繁體中文”。切换语言后需要重新安装加载项并重启 WPS 文字。
-6. **菜单布局** 可在同一页选择“当前分组布局 / EndNote 风格 / Zotero 风格”。切换后需要重启 WPS 文字。
+5. 界面语言可在同一页的 **界面语言** 中选择“自动 / English / 简体中文 / 繁體中文”。切换后会自动重写功能区，**重启 WPS 文字**即可生效。
+6. **菜单布局** 可在同一页选择“当前分组布局 / EndNote 风格 / Zotero 风格”，也可以直接在 WPS 的 Zotero 选项卡中点击 **切换布局**。切换后需要重启 WPS 文字。
 
 > Zotero 每次启动时会自动检查并更新 WPS 加载项。若 WPS 在退出时重写了 `publish.xml`，重新打开 Zotero 或点击一次“安装 / 修复”即可恢复。
 
@@ -176,6 +176,7 @@ npm run build
 ```
 src/
   shared/protocol.js        # 域代码/文档数据转换（WPS 与测试共用）
+  shared/i18n.js            # 三语言界面文案（Zotero 与 WPS 共用）
   zotero-plugin/            # Zotero 7+ 启动式插件
     bootstrap.js
     content/zotero-wps.js   # /wps/* 接口、CORS、安装器

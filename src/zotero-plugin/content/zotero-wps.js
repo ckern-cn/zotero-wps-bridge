@@ -14,7 +14,7 @@ var ZoteroWPSGlobal = this;
 
 var ZoteroWPS = {
     id: null,
-    version: '0.2.9',
+    version: '0.2.10',
     rootURI: null,
     token: null,
     addonFiles: null,
@@ -52,6 +52,7 @@ var ZoteroWPS = {
     _origKeepRaised: undefined,
     _keepRaisedApplied: false,
     _installTimer: null,
+    _menuTimer: null,
     _prefPaneRetry: null,
     _prefPaneRetries: 0,
     _windows: new WeakSet(),
@@ -64,6 +65,9 @@ var ZoteroWPS = {
 
         this.token = this.getOrCreateToken();
         this.localeOverride = Zotero.Prefs.get('zotero-wps.locale') || 'auto';
+        if (!['auto', 'en-US', 'zh-CN', 'zh-TW'].includes(this.localeOverride)) {
+            this.localeOverride = 'auto';
+        }
         this.loadI18n();
         this.translator = this.i18n
             ? this.i18n.createTranslator(this.getZoteroLocale(), this.getZoteroLocale())
@@ -83,6 +87,24 @@ var ZoteroWPS = {
                 Zotero.logError(e);
             });
         }, 2500);
+
+        // When the plugin is enabled from an already running Zotero, the main
+        // window may never receive another onMainWindowLoad call. Add the
+        // Tools menu explicitly once the window is ready.
+        const self = this;
+        this._menuTimer = setTimeout(function () {
+            self._menuTimer = null;
+            try {
+                if (Zotero.getMainWindows) {
+                    for (let win of Zotero.getMainWindows()) {
+                        self.onMainWindowLoad(win);
+                    }
+                }
+            }
+            catch (e) {
+                Zotero.logError(e);
+            }
+        }, 1000);
     },
 
     shutdown: function () {
@@ -93,6 +115,10 @@ var ZoteroWPS = {
         if (this._installTimer) {
             clearTimeout(this._installTimer);
             this._installTimer = null;
+        }
+        if (this._menuTimer) {
+            clearTimeout(this._menuTimer);
+            this._menuTimer = null;
         }
         if (this._prefPaneRetry) {
             clearTimeout(this._prefPaneRetry);
@@ -167,7 +193,7 @@ var ZoteroWPS = {
         }
         catch (e) {}
         try {
-            if (navigator.languages) {
+            if (navigator.languages && navigator.languages.length) {
                 candidates.push.apply(candidates, navigator.languages);
             }
             else if (navigator.language) {
@@ -205,18 +231,26 @@ var ZoteroWPS = {
     },
 
     setLocale: async function (locale) {
-        this.localeOverride = locale || 'auto';
+        if (!['auto', 'en-US', 'zh-CN', 'zh-TW'].includes(locale)) {
+            locale = 'auto';
+        }
+        this.localeOverride = locale;
         Zotero.Prefs.set('zotero-wps.locale', this.localeOverride);
         if (this.i18n) {
             this.translator = this.i18n.createTranslator(
                 this.getZoteroLocale(), this.getZoteroLocale());
         }
         this.updateMenuLabels();
+        let installError = null;
         try {
             await this.ensureInstalled(true);
         }
         catch (e) {
             Zotero.logError(e);
+            installError = e;
+        }
+        if (installError) {
+            throw installError;
         }
         return this.getLocale();
     },
@@ -808,11 +842,15 @@ var ZoteroWPS = {
 
         const result = [];
         const seen = new Set();
+        // Windows and macOS filesystems are normally case-insensitive, and
+        // WPS installers have used both "kingsoft" and "Kingsoft".
+        const foldCase = Zotero.isWin || Zotero.isMac;
         for (let dir of candidates) {
-            if (seen.has(dir)) {
+            const key = foldCase ? dir.toLowerCase() : dir;
+            if (seen.has(key)) {
                 continue;
             }
-            seen.add(dir);
+            seen.add(key);
             try {
                 if (await IOUtils.exists(dir)) {
                     result.push(dir);
@@ -856,24 +894,49 @@ var ZoteroWPS = {
         }
     },
 
+    getRequiredAddonFiles: function () {
+        if (this.addonFiles) {
+            const files = Object.keys(this.addonFiles)
+                .filter(f => f !== 'js/config.js' && f !== 'ribbon.xml');
+            files.push('ribbon.xml', 'js/config.js');
+            return files;
+        }
+        return [
+            'manifest.xml',
+            'index.html',
+            'main.js',
+            'dialog.html',
+            'ribbon.xml',
+            'ribbon-endnote.xml',
+            'ribbon-zotero.xml',
+            'images/annotation.svg',
+            'images/bibliography.svg',
+            'images/citation.svg',
+            'images/explorer.svg',
+            'images/export.svg',
+            'images/info.svg',
+            'images/link.svg',
+            'images/note.svg',
+            'images/refresh.svg',
+            'images/settings.svg',
+            'images/unlink.svg',
+            'js/app.js',
+            'js/config.js',
+            'js/doc.js',
+            'js/i18n.js',
+            'js/protocol.js',
+            'js/richtext.js',
+            'js/util.js',
+            'js/zotero.js'
+        ];
+    },
+
     isInstalledComplete: async function (dir, version) {
         if (!version) {
             return false;
         }
         const target = PathUtils.join(dir, 'zotero-wps_' + version);
-        const required = [
-            'manifest.xml',
-            'ribbon.xml',
-            'dialog.html',
-            'js/app.js',
-            'js/config.js',
-            'js/i18n.js',
-            'js/protocol.js',
-            'js/util.js',
-            'js/richtext.js',
-            'js/doc.js',
-            'js/zotero.js'
-        ];
+        const required = this.getRequiredAddonFiles();
         try {
             for (let relative of required) {
                 const full = PathUtils.join.apply(
@@ -923,6 +986,41 @@ var ZoteroWPS = {
         return installed;
     },
 
+    removeStagingDirs: async function (dir) {
+        const names = await IOUtils.getChildren(dir).catch(function () { return []; });
+        for (let name of names) {
+            const base = PathUtils.filename(name);
+            if (base.indexOf('.zotero-wps-staging-') === 0) {
+                try {
+                    await IOUtils.remove(PathUtils.join(dir, base), {
+                        recursive: true,
+                        ignoreAbsent: true
+                    });
+                }
+                catch (e) {
+                    Zotero.logError(e);
+                }
+            }
+        }
+    },
+
+    writeAddonFiles: async function (target) {
+        await IOUtils.makeDirectory(target, { createAncestors: true, ignoreExisting: true });
+        for (let relativePath of Object.keys(this.addonFiles)) {
+            if (relativePath === 'js/config.js' || relativePath === 'ribbon.xml') {
+                continue;
+            }
+            const fullPath = PathUtils.join.apply(PathUtils, [target].concat(relativePath.split('/')));
+            await IOUtils.makeDirectory(PathUtils.parent(fullPath), {
+                createAncestors: true,
+                ignoreExisting: true
+            });
+            await IOUtils.write(fullPath, this.b64ToBytes(this.addonFiles[relativePath]));
+        }
+        await this.writeRibbon(target);
+        await this.writeConfig(target);
+    },
+
     installToDir: async function (dir) {
         if (!this.addonFiles) {
             this.loadAddonBundle();
@@ -932,6 +1030,30 @@ var ZoteroWPS = {
         }
         const version = this.version;
         const target = PathUtils.join(dir, 'zotero-wps_' + version);
+        const staging = PathUtils.join(dir, '.zotero-wps-staging-' + version + '-'
+            + Zotero.Utilities.randomString(8));
+
+        await this.removeStagingDirs(dir);
+        try {
+            // Prepare the complete new directory before removing the working
+            // copy, so a failed write leaves the previous installation usable.
+            await this.writeAddonFiles(staging);
+            try {
+                await IOUtils.remove(target, { recursive: true, ignoreAbsent: true });
+            }
+            catch (e) {
+                Zotero.logError(e);
+            }
+            await IOUtils.move(staging, target);
+            await this.updateRegistries(dir);
+        }
+        catch (e) {
+            try {
+                await IOUtils.remove(staging, { recursive: true, ignoreAbsent: true });
+            }
+            catch (err) {}
+            throw e;
+        }
 
         const names = await IOUtils.getChildren(dir).catch(function () { return []; });
         for (let name of names) {
@@ -948,27 +1070,6 @@ var ZoteroWPS = {
                 }
             }
         }
-        try {
-            await IOUtils.remove(target, { recursive: true, ignoreAbsent: true });
-        }
-        catch (e) {}
-
-        await IOUtils.makeDirectory(target, { createAncestors: true, ignoreExisting: true });
-        for (let relativePath of Object.keys(this.addonFiles)) {
-            if (relativePath === 'js/config.js' || relativePath === 'ribbon.xml') {
-                continue;
-            }
-            const fullPath = PathUtils.join.apply(PathUtils, [target].concat(relativePath.split('/')));
-            await IOUtils.makeDirectory(PathUtils.parent(fullPath), {
-                createAncestors: true,
-                ignoreExisting: true
-            });
-            await IOUtils.write(fullPath, this.b64ToBytes(this.addonFiles[relativePath]));
-        }
-
-        await this.writeRibbon(target);
-        await this.writeConfig(target);
-        await this.updateRegistries(dir);
 
         Zotero.debug('Zotero WPS Bridge: installed WPS add-in to ' + target);
         return target;
@@ -1039,7 +1140,7 @@ var ZoteroWPS = {
                 ? 'ribbon-zotero.xml'
                 : 'ribbon.xml';
         if (!this.addonFiles || !this.addonFiles[file]) {
-            return;
+            throw new Error(this.t('zotero.error.missingBundle'));
         }
         const bytes = this.b64ToBytes(this.addonFiles[file]);
         let xml;
@@ -1180,6 +1281,7 @@ var ZoteroWPS = {
     uninstall: async function () {
         const dirs = await this.getAddonDirs();
         for (let dir of dirs) {
+            await this.removeStagingDirs(dir);
             const names = await IOUtils.getChildren(dir).catch(function () { return []; });
             for (let name of names) {
                 const base = PathUtils.filename(name);
@@ -1269,7 +1371,9 @@ var ZoteroWPS = {
             keepDialogRaised: Zotero.Prefs.get('zotero-wps.keepDialogRaised') !== false,
             ribbonLayout: this.getRibbonLayout(),
             tokenMasked: token ? token.substring(0, 6) + '…' + token.substring(token.length - 4) : '',
-            locale: this.localeOverride || 'auto',
+            locale: ['auto', 'en-US', 'zh-CN', 'zh-TW'].includes(this.localeOverride)
+                ? this.localeOverride
+                : 'auto',
             uiLocale: this.getLocale(),
             inProgress: !!Zotero.HTTPIntegrationClient.inProgress
         };

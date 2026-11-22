@@ -13,7 +13,7 @@
                             onAction="OnAction"
                             getEnabled="OnGetEnabled" getImage="GetImage" size="large"
                             keytip="B"/>
-                    <button id="btnAddNote" label="Insert Note"
+                    <button id="btnAddNote" label="Add Note"
                             supertip="Insert a note from Zotero."
                             onAction="OnAction"
                             getEnabled="OnGetEnabled" getImage="GetImage" size="large"

@@ -26,6 +26,20 @@ function shutdown(data, reason) {
         return;
     }
     if (ZoteroWPS) {
+        // Removing the Zotero plugin should not leave an orphaned WPS add-in
+        // behind. Upgrades do not use ADDON_UNINSTALL, so their files remain
+        // available for the new version to update.
+        if (reason === ADDON_UNINSTALL) {
+            try {
+                const result = ZoteroWPS.uninstall();
+                if (result && result.catch) {
+                    result.catch(function (e) { Zotero.logError(e); });
+                }
+            }
+            catch (e) {
+                Zotero.logError(e);
+            }
+        }
         ZoteroWPS.shutdown();
         ZoteroWPS = null;
     }

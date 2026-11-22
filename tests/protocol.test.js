@@ -13,6 +13,8 @@ test('recognizes Zotero field codes', () => {
     assert.equal(P.isZoteroFieldCode(' ADDIN ZOTERO_BIBL {"bibliography":[]} '), true);
     assert.equal(P.isZoteroFieldCode('TEMP'), true);
     assert.equal(P.isZoteroFieldCode('HYPERLINK "https://example.com"'), false);
+    assert.equal(P.isZoteroFieldCode('TEMPLATE "Normal.dotm"'), false);
+    assert.equal(P.isZoteroFieldCode('TEMPERATURE 20'), false);
 });
 
 test('converts between WPS/Word and HTTP field codes', () => {

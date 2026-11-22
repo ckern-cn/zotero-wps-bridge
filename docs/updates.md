@@ -16,7 +16,7 @@
 
 ```text
 update_url  -> https://example.com/zotero-wps-bridge/updates.json
-update_link -> https://example.com/zotero-wps-bridge/zotero-wps-bridge-0.2.9.xpi
+update_link -> https://example.com/zotero-wps-bridge/zotero-wps-bridge-0.2.10.xpi
 XPI 下载页  -> 用户首次安装时使用（可选）
 ```
 
@@ -49,13 +49,13 @@ Zotero 7+ 使用 JSON 更新清单（替代旧版 `update.rdf`）：
     "zotero-wps@wps-zotero": {
       "updates": [
         {
-          "version": "0.2.9",
-          "update_link": "https://example.com/zotero-wps-bridge/zotero-wps-bridge-0.2.9.xpi",
+          "version": "0.2.10",
+          "update_link": "https://example.com/zotero-wps-bridge/zotero-wps-bridge-0.2.10.xpi",
           "update_hash": "sha256:<xpi-sha256>",
           "applications": {
             "zotero": {
-              "strict_min_version": "6.999",
-              "strict_max_version": "10.*"
+              "strict_min_version": "7.0",
+              "strict_max_version": "10.9.9"
             }
           }
         }
@@ -88,11 +88,11 @@ npm run build
 
 ```bash
 UPDATE_URL='https://example.com/zotero-wps-bridge/updates.json' \
-UPDATE_LINK='https://example.com/zotero-wps-bridge/releases/zotero-wps-bridge-0.2.9.xpi' \
+UPDATE_LINK='https://example.com/zotero-wps-bridge/releases/zotero-wps-bridge-0.2.10.xpi' \
 npm run build
 ```
 
-不设置这些环境变量时，构建产物**不包含** `update_url`，也不会生成 `updates.json`，只能手动更新。
+不设置这些环境变量时，XPI 会保留源码中的 `.invalid` 占位 `update_url`（用于通过 Zotero 10 的安装校验），也不会生成 `updates.json`，因此无法自动更新，只能手动安装新版 XPI。正式发布必须设置 `UPDATE_URL`。
 
 ## 托管方案
 
@@ -112,7 +112,7 @@ npm run build
 
 ```text
 updates.json
-zotero-wps-bridge-0.2.9.xpi
+zotero-wps-bridge-0.2.10.xpi
 ```
 
 构建：
@@ -123,16 +123,16 @@ UPDATE_LINK_BASE='https://<user>.github.io/zotero-wps-bridge/' \
 npm run build
 ```
 
-然后把 `dist/updates.json` 和 `dist/zotero-wps-bridge-0.2.9.xpi` 发布到 Pages。
+然后把 `dist/updates.json` 和 `dist/zotero-wps-bridge-0.2.10.xpi` 发布到 Pages。
 
 ### GitHub Releases 示例
 
-1. 创建 release `v0.2.9`，上传 `zotero-wps-bridge-0.2.9.xpi` 和 `updates.json`。
+1. 创建 release `v0.2.10`，上传 `zotero-wps-bridge-0.2.10.xpi` 和 `updates.json`。
 2. 构建时使用：
 
 ```bash
 UPDATE_URL='https://github.com/<user>/zotero-wps-bridge/releases/latest/download/updates.json' \
-UPDATE_LINK_BASE='https://github.com/<user>/zotero-wps-bridge/releases/download/v0.2.9/' \
+UPDATE_LINK_BASE='https://github.com/<user>/zotero-wps-bridge/releases/download/v0.2.10/' \
 npm run build
 ```
 
@@ -161,7 +161,7 @@ location /zotero-wps/ {
 
 ## 发版检查清单
 
-1. 修改 `package.json` 的 `version`（必须大于旧版本）。
+1. 修改 `package.json` 的 `version`（必须大于旧版本），同步 `src/zotero-plugin/manifest.json`、`src/zotero-plugin/content/zotero-wps.js`、`src/wps-addon/js/config.js`、`src/wps-addon/js/app.js` 回退值和 `CHANGELOG.md`；`npm test` 会检查这些位置是否一致。
 2. `npm test && npm run build`。
 3. 用 `UPDATE_URL` / `UPDATE_LINK_BASE` 构建发布包。
 4. 上传：

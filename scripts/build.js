@@ -208,6 +208,16 @@ function build() {
     // UPDATE_LINK_BASE or UPDATE_LINK) when building a release.
     const updateUrl = process.env.UPDATE_URL || '';
     if (updateUrl) {
+        let parsed;
+        try {
+            parsed = new URL(updateUrl);
+        }
+        catch (e) {
+            throw new Error('UPDATE_URL is not a valid URL: ' + updateUrl);
+        }
+        if (parsed.protocol !== 'https:') {
+            throw new Error('UPDATE_URL must use https://: ' + updateUrl);
+        }
         manifest.applications.zotero.update_url = updateUrl;
     }
     fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
@@ -253,6 +263,16 @@ function build() {
             || (linkBase ? linkBase.replace(/\/?$/, '/') + path.basename(xpi) : '');
         if (!updateLink) {
             throw new Error('UPDATE_URL is set, but neither UPDATE_LINK_BASE nor UPDATE_LINK is provided');
+        }
+        let parsedLink;
+        try {
+            parsedLink = new URL(updateLink);
+        }
+        catch (e) {
+            throw new Error('Update download URL is invalid: ' + updateLink);
+        }
+        if (parsedLink.protocol !== 'https:') {
+            throw new Error('Update download URL must use https://: ' + updateLink);
         }
         const updateManifest = createUpdateManifest({
             id: manifest.applications.zotero.id,

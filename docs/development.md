@@ -85,6 +85,10 @@ npm test
 - 长文档属性分段
 - 随机 ID
 - 三语言词条完整性、语言代码归一化与参数插值
+- 三套 Ribbon 的按钮/分组 ID、文案、图标与 `ribbonKeys` 一致性
+- 设置页翻译键、元素 ID、语言/布局选项与危险操作确认
+- 版本号、插件 ID、兼容版本范围与 `update_url` 元数据
+- 文档中的相对链接与当前版本号
 
 人工 GUI 回归请使用 [`gui-test-checklist.md`](gui-test-checklist.md)。当前阶段不配置 CI/自动发布流程。
 
@@ -101,8 +105,8 @@ npm test
 
 ## 发布
 
-1. 修改 `package.json` 的 `version`。
-2. `npm run build`。
+1. 修改 `package.json` 的 `version`，并同步 `manifest.json`、`zotero-wps.js`、`config.js`、`app.js` 回退值、文档版本号和 `CHANGELOG.md`。
+2. `npm test && npm run build`；版本测试会检查所有位置一致。
 3. 上传 `dist/zotero-wps-bridge-<version>.xpi` 和 `dist/SHA256SUMS.txt`。
 4. Zotero 插件更新时，`ensureInstalled()` 会检测版本并替换 WPS 加载项目录。
 
