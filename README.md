@@ -2,7 +2,7 @@
 
 在 **WPS 文字** 中使用 **Zotero** 插入、编辑和刷新引文与参考文献。
 
-> 官方网站：<https://zw.ckern.cn/>
+> 官方网站（简体中文 / English）：<https://zw.ckern.cn/>
 >
 > GitHub：<https://github.com/ckern-cn/zotero-wps-bridge>
 >

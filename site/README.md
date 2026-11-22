@@ -1,6 +1,10 @@
 # 官方网站（zw.ckern.cn）
 
-这是 `Zotero WPS Bridge` 的静态单页站点。纯 HTML/CSS/JS，没有后端、账号、数据库或第三方统计。
+这是 `Zotero WPS Bridge` 的静态站点。纯 HTML/CSS/JS，没有后端、账号、数据库或第三方统计。
+
+- `/`：简体中文首页
+- `/en/`：English landing page
+- 两页通过 `hreflang` 和页头语言链接互相指向
 
 ## 发布前必须修改
 
@@ -109,7 +113,8 @@ Zotero 会自动从这里检查新版本。`version.json` 只用于页面显示�
 
 ```text
 site/
-  index.html          首页
+  index.html          简体中文首页
+  en/index.html       English landing page
   404.html            404 页面
   styles.css          样式
   app.js              导航、版本号、下载链接
@@ -140,4 +145,6 @@ site/
 - 不要在这个目录放 token、用户数据或私有日志。
 - 不要引入第三方统计脚本；项目以“本地优先、无遥测”为卖点。
 - 修改版本号后重新运行 `npm run build:site`，不要手改 `downloads/` 或 `updates.json`。
+- 修改文案时请同时检查 `site/index.html` 和 `site/en/index.html`，保持功能、下载链接和捐赠说明一致。
+- 英文页使用 `../assets/`、`../config.js` 和 `../app.js`；`app.js` 从站点根读取 `/version.json`。
 - 站点文案里的“已验证”目前只适用于 Linux + WPS 12.1.2 + Zotero 10.0.8；Windows/macOS 保持 Beta 表述。

@@ -1,8 +1,8 @@
 /*
  * 站点链接配置。
  *
- * 发布前请把 repo / releases / issues / changelog / license / security /
- * donate 换成真实地址。域名固定为 https://zw.ckern.cn。
+ * 官方域名：https://zw.ckern.cn
+ * 主仓库：GitHub；Gitee 作为国内镜像。
  */
 window.ZW_SITE = {
     domain: 'https://zw.ckern.cn',

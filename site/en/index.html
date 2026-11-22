@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zotero WPS Bridge — Use Zotero citations in WPS Writer</title>
+<meta name="description" content="Free and open-source Zotero integration for WPS Writer. Insert, edit, and refresh citations and bibliographies, with no Python or proxy and your documents kept local.">
+<meta name="keywords" content="Zotero,WPS Writer,citations,bibliography,reference manager,academic writing,Zotero WPS Bridge">
+<meta name="author" content="ckern studio">
+<meta name="theme-color" content="#0a1b2c">
+<link rel="canonical" href="https://zw.ckern.cn/en/">
+<link rel="alternate" hreflang="zh-CN" href="https://zw.ckern.cn/">
+<link rel="alternate" hreflang="en" href="https://zw.ckern.cn/en/">
+<link rel="alternate" hreflang="x-default" href="https://zw.ckern.cn/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Zotero WPS Bridge">
+<meta property="og:title" content="Zotero WPS Bridge — Use Zotero citations in WPS Writer">
+<meta property="og:description" content="Free and open source. Local-first. No Python or proxy. Insert, edit, and refresh Zotero citations and bibliographies in WPS Writer.">
+<meta property="og:url" content="https://zw.ckern.cn/en/">
+<meta property="og:image" content="https://zw.ckern.cn/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Zotero WPS Bridge">
+<meta name="twitter:description" content="Use Zotero citations and bibliographies in WPS Writer. Free, open source, local-first.">
+<meta name="twitter:image" content="https://zw.ckern.cn/assets/og-image.png">
+<link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/icon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="../assets/icon-128.png">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="stylesheet" href="../styles.css">
+<script src="../config.js"></script>
+<script src="../app.js" defer></script>
+<script>
+    document.documentElement.classList.add('js');
+    window.setTimeout(function () {
+        var items = document.querySelectorAll('[data-reveal]');
+        for (var i = 0; i < items.length; i++) {
+            items[i].classList.add('is-visible');
+        }
+    }, 2500);
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" id="top">
+  <div class="shell header-inner">
+    <a class="brand" href="#top">
+      <img src="../assets/icon.svg" alt="" width="42" height="42">
+      <span class="brand-text">
+        <strong>Zotero WPS Bridge</strong>
+        <small>WPS Writer × Zotero</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="sr-only">Open navigation</span>
+    </button>
+
+    <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+      <a href="#features">Features</a>
+      <a href="#install">Install</a>
+      <a href="#compatibility">Compatibility</a>
+      <a href="#faq">FAQ</a>
+      <a href="#open-source">Open source</a>
+      <a class="nav-cta" href="#download">Download</a>
+      <a class="lang-link" href="../" hreflang="zh-CN">中文</a>
+      <a class="nav-icon" data-link="repo" href="https://github.com/ckern-cn/zotero-wps-bridge" target="_blank" rel="noopener">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        <span class="sr-only">Source code</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="hero-glow hero-glow-a" aria-hidden="true"></div>
+    <div class="hero-glow hero-glow-b" aria-hidden="true"></div>
+    <div class="shell hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="pulse"></span>Free · Open source · Local-first</p>
+        <h1>Zotero citations,<br><span class="gradient-text">right inside WPS Writer</span></h1>
+        <p class="hero-lead">
+          Insert, edit, and refresh Zotero citations and bibliographies in WPS Writer.
+          No Python, proxy, or extra account required—your documents stay on your machine.
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" data-download="xpi" href="/downloads/zotero-wps-bridge-latest.xpi">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
+            Download Zotero plugin
+          </a>
+          <a class="button button-ghost" href="#install">
+            Installation steps
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+          </a>
+        </div>
+        <p class="hero-meta">
+          <span>Latest <strong data-version>latest</strong></span>
+          <span>AGPL-3.0</span>
+          <span>Zotero 7–10.9.9</span>
+        </p>
+      </div>
+
+      <div class="hero-visual">
+        <div class="app-window" aria-label="Illustration of the WPS ribbon and a Zotero citation">
+          <div class="app-titlebar">
+            <span class="traffic traffic-a"></span>
+            <span class="traffic traffic-b"></span>
+            <span class="traffic traffic-c"></span>
+            <span class="app-title">sample-paper.docx</span>
+            <span class="app-badge">MOCKUP</span>
+          </div>
+          <div class="ribbon-tabs" role="presentation">
+            <span>Home</span>
+            <span>Insert</span>
+            <span>References</span>
+            <span class="active">Zotero</span>
+          </div>
+          <div class="ribbon">
+            <div class="ribbon-group">
+              <div class="ribbon-buttons">
+                <span class="ribbon-button large">
+                  <img src="../assets/ribbon/citation.svg" alt="" width="30" height="30">
+                  <span>Insert/Edit Citation</span>
+                </span>
+                <span class="ribbon-button large">
+                  <img src="../assets/ribbon/bibliography.svg" alt="" width="30" height="30">
+                  <span>Insert/Edit Bibliography</span>
+                </span>
+                <span class="ribbon-button large">
+                  <img src="../assets/ribbon/refresh.svg" alt="" width="30" height="30">
+                  <span>Refresh</span>
+                </span>
+                <span class="ribbon-button large">
+                  <img src="../assets/ribbon/settings.svg" alt="" width="30" height="30">
+                  <span>Document Preferences</span>
+                </span>
+              </div>
+              <span class="ribbon-title">Citations</span>
+            </div>
+            <div class="ribbon-group secondary">
+              <div class="ribbon-buttons">
+                <span class="ribbon-button">
+                  <img src="../assets/ribbon/note.svg" alt="" width="24" height="24">
+                  <span>Insert Note</span>
+                </span>
+                <span class="ribbon-button">
+                  <img src="../assets/ribbon/unlink.svg" alt="" width="24" height="24">
+                  <span>Unlink Citations</span>
+                </span>
+                <span class="ribbon-button">
+                  <img src="../assets/ribbon/explorer.svg" alt="" width="24" height="24">
+                  <span>Citation Explorer</span>
+                </span>
+              </div>
+              <span class="ribbon-title">Tools</span>
+            </div>
+          </div>
+          <div class="document">
+            <p class="doc-kicker">Chapter 3 · Literature review</p>
+            <p class="doc-heading">Managing sources in digital humanities</p>
+            <p>Open science and reproducible research have become central to academic writing<span class="citation">(Zhang, 2024)</span>. Researchers increasingly embed citation tools into their writing workflow to avoid manual bibliography errors<span class="citation">(Li et al., 2023)</span>.</p>
+            <p>In Chinese office environments, WPS Writer remains the default for many universities and institutions. Bringing Zotero into WPS lets researchers keep a familiar workflow while using the same library.</p>
+            <div class="bibliography">
+              <p class="bib-title">References</p>
+              <p>[1] Zhang, S. Citation management in the open-science era. 2024.</p>
+              <p>[2] Li, S., &amp; Wang, W. Citation workflows in Chinese office software. 2023.</p>
+            </div>
+          </div>
+        </div>
+        <div class="float-card">
+          <span class="float-icon">
+            <img src="../assets/ribbon/refresh.svg" alt="" width="28" height="28">
+          </span>
+          <span>
+            <strong>Citations updated</strong>
+            <small>2 citations · 1 bibliography</small>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="trust-strip" aria-label="Highlights">
+    <div class="shell trust-grid">
+      <span><b>No proxy</b> No Python or Node process</span>
+      <span><b>Local by default</b> Documents are not uploaded</span>
+      <span><b>Word-compatible fields</b> Keep editing the same .docx</span>
+      <span><b>Three layouts</b> Current / EndNote / Zotero style</span>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="shell">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow eyebrow-dark">Features</p>
+        <h2>What you will actually use</h2>
+        <p>Not another Zotero client—just Zotero's citation engine, connected to WPS Writer.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card" data-reveal>
+          <span class="feature-icon"><img src="../assets/ribbon/citation.svg" alt="" width="34" height="34"></span>
+          <h3>Insert / edit citations</h3>
+          <p>Add a citation at the cursor, or click an existing one to edit items, locators, prefixes, and suffixes.</p>
+        </article>
+        <article class="feature-card" data-reveal data-reveal-delay="60">
+          <span class="feature-icon"><img src="../assets/ribbon/bibliography.svg" alt="" width="34" height="34"></span>
+          <h3>Automatic bibliography</h3>
+          <p>Generate a bibliography at the end of the document, sorted by the active CSL style and updated on refresh.</p>
+        </article>
+        <article class="feature-card" data-reveal data-reveal-delay="120">
+          <span class="feature-icon"><img src="../assets/ribbon/settings.svg" alt="" width="34" height="34"></span>
+          <h3>Document preferences</h3>
+          <p>Switch citation style, language, and body / footnote / endnote placement without rebuilding the document.</p>
+        </article>
+        <article class="feature-card" data-reveal>
+          <span class="feature-icon"><img src="../assets/ribbon/refresh.svg" alt="" width="34" height="34"></span>
+          <h3>One-click refresh</h3>
+          <p>When item metadata changes, refresh the whole document and keep citations and bibliography in sync.</p>
+        </article>
+        <article class="feature-card" data-reveal data-reveal-delay="60">
+          <span class="feature-icon"><img src="../assets/ribbon/note.svg" alt="" width="34" height="34"></span>
+          <h3>Notes and annotations</h3>
+          <p>Insert Zotero notes, annotations, or highlights as citations while preserving basic formatting and punctuation.</p>
+        </article>
+        <article class="feature-card" data-reveal data-reveal-delay="120">
+          <span class="feature-icon"><img src="../assets/ribbon/export.svg" alt="" width="34" height="34"></span>
+          <h3>Unlink and export</h3>
+          <p>Keep the rendered text and remove field codes when finalizing, or export to another word processor.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="install">
+    <div class="shell">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow eyebrow-dark">Install</p>
+        <h2>Three steps, about 3 minutes</h2>
+        <p>Install the Zotero plugin first, then ask Zotero to write the add-in into WPS. Restart WPS after every update.</p>
+      </div>
+      <div class="steps">
+        <article class="step-card" data-reveal>
+          <span class="step-number">01</span>
+          <h3>Install the Zotero plugin</h3>
+          <p>Download the XPI, install it from <strong>Tools → Plugins</strong> in Zotero, then restart Zotero.</p>
+          <a class="text-link" data-download="xpi" href="/downloads/zotero-wps-bridge-latest.xpi">Download the latest XPI <span aria-hidden="true">→</span></a>
+        </article>
+        <article class="step-card" data-reveal data-reveal-delay="60">
+          <span class="step-number">02</span>
+          <h3>Install the WPS add-in</h3>
+          <p>Open <strong>Zotero Settings → WPS</strong>, click “Install / Repair WPS Add-in”, then fully quit and restart WPS Writer.</p>
+          <span class="step-hint">If no directory is found, start WPS once, then refresh the status.</span>
+        </article>
+        <article class="step-card" data-reveal data-reveal-delay="120">
+          <span class="step-number">03</span>
+          <h3>Start citing</h3>
+          <p>In WPS Writer, open the <strong>Zotero</strong> tab and click “Add/Edit Citation”, then choose an item.</p>
+          <a class="text-link" href="#faq">Troubleshooting <span aria-hidden="true">→</span></a>
+        </article>
+      </div>
+      <div class="install-note" data-reveal>
+        <strong>First run:</strong> if there is no Zotero tab in WPS, start WPS once so it creates the <code>jsaddons</code> directory, then return to Zotero Settings and click “Install / Repair WPS Add-in”.
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="compatibility">
+    <div class="shell">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow eyebrow-dark">Compatibility</p>
+        <h2>Check your platform first</h2>
+        <p>Linux is verified end to end. Windows and macOS are in beta; the add-in itself does not depend on OS-specific components.</p>
+      </div>
+      <div class="compat-wrap" data-reveal>
+        <table class="compat-table">
+          <thead>
+            <tr><th>Platform</th><th>WPS</th><th>Zotero</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Linux</td>
+              <td>12.1.2</td>
+              <td>10.0.8</td>
+              <td><span class="status status-ok">Verified</span></td>
+            </tr>
+            <tr>
+              <td>Windows 10 / 11</td>
+              <td>12.x</td>
+              <td>10.x</td>
+              <td><span class="status status-beta">Beta</span></td>
+            </tr>
+            <tr>
+              <td>macOS</td>
+              <td>12.x</td>
+              <td>10.x</td>
+              <td><span class="status status-beta">Beta</span></td>
+            </tr>
+            <tr>
+              <td>Zotero versions</td>
+              <td>—</td>
+              <td>7.0–10.9.9</td>
+              <td><span class="status status-ok">Supported</span></td>
+            </tr>
+            <tr>
+              <td>Storage mode</td>
+              <td>—</td>
+              <td>Fields</td>
+              <td><span class="status status-muted">No Bookmarks</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="compat-note">Complex layouts, Track Changes, protected documents, and fields in headers/footers have not been specifically validated. Test on a copy first.</p>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="faq">
+    <div class="shell shell-narrow">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow eyebrow-dark">FAQ</p>
+        <h2>Common installation and usage questions</h2>
+      </div>
+      <div class="faq" data-reveal>
+        <details>
+          <summary>There is no Zotero tab in WPS.</summary>
+          <div class="faq-body">
+            <p>Start WPS once (you can close it immediately) so it creates the <code>jsaddons</code> directory. In Zotero Settings → WPS, click “Refresh Status”, then “Install / Repair WPS Add-in”. Fully quit WPS, including tray or background processes, and open it again.</p>
+          </div>
+        </details>
+        <details>
+          <summary>It says it cannot connect to Zotero.</summary>
+          <div class="faq-body">
+            <p>Make sure Zotero is running, the Zotero WPS Bridge plugin is enabled, and port 23119 is available. Use “Check Connection” in WPS or inspect the port and token in Zotero Settings → WPS. Your firewall must allow local loopback connections.</p>
+          </div>
+        </details>
+        <details>
+          <summary>Why must I restart WPS after installing or updating?</summary>
+          <div class="faq-body">
+            <p>WPS caches files in the add-in directory. Closing document windows may not release the background process. Fully quit WPS Writer and launch it again.</p>
+          </div>
+        </details>
+        <details>
+          <summary>Are my documents uploaded anywhere?</summary>
+          <div class="faq-body">
+            <p>No. The WPS add-in talks to Zotero over <code>127.0.0.1</code> only. There is no account system, cloud sync, or telemetry; citations and documents are processed locally.</p>
+          </div>
+        </details>
+        <details>
+          <summary>Is it compatible with Zotero's Word plugin?</summary>
+          <div class="faq-body">
+            <p>It uses Word-compatible <code>ADDIN ZOTERO_*</code> fields, so the same <code>.docx</code> can be edited in Word and WPS. Complex styles, merged citations, and round trips should still be tested on a copy.</p>
+          </div>
+        </details>
+        <details>
+          <summary>Which Zotero and WPS versions are supported?</summary>
+          <div class="faq-body">
+            <p>Zotero 7.0–10.9.9 and WPS Writer 12.x. Linux has been verified with WPS 12.1.2 and Zotero 10.0.8; Windows and macOS remain beta.</p>
+          </div>
+        </details>
+        <details>
+          <summary>How do I uninstall it?</summary>
+          <div class="faq-body">
+            <p>In Zotero Settings → WPS, click “Uninstall WPS Add-in”, then restart WPS. Existing citations in documents are not deleted.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="open-source">
+    <div class="shell">
+      <div class="open-source-grid">
+        <div class="open-source-copy" data-reveal>
+          <p class="eyebrow eyebrow-dark">Open source &amp; privacy</p>
+          <h2>Auditable code. Local data.</h2>
+          <p>Released under AGPL-3.0-or-later, with build scripts, tests, and the WPS add-in source in the repository. No accounts, no telemetry, no hidden cloud uploads.</p>
+          <div class="inline-links">
+            <a class="text-link" data-link="repo" href="https://github.com/ckern-cn/zotero-wps-bridge" target="_blank" rel="noopener">GitHub source <span aria-hidden="true">→</span></a>
+            <a class="text-link" data-link="gitee" href="https://gitee.com/ckern/zotero-wps-bridge" target="_blank" rel="noopener">Gitee mirror <span aria-hidden="true">→</span></a>
+            <a class="text-link" data-link="security" href="https://github.com/ckern-cn/zotero-wps-bridge/blob/main/SECURITY.md" target="_blank" rel="noopener">Security <span aria-hidden="true">→</span></a>
+            <a class="text-link" data-link="license" href="https://github.com/ckern-cn/zotero-wps-bridge/blob/main/LICENSE" target="_blank" rel="noopener">License <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+        <div class="security-cards" data-reveal data-reveal-delay="80">
+          <div class="security-card">
+            <span class="security-kicker">127.0.0.1</span>
+            <strong>Loopback only</strong>
+            <p>Requests between WPS and Zotero never leave your machine.</p>
+          </div>
+          <div class="security-card">
+            <span class="security-kicker">TOKEN</span>
+            <strong>Token-protected writes</strong>
+            <p>The token is generated by Zotero and written to the local add-in config.</p>
+          </div>
+          <div class="security-card">
+            <span class="security-kicker">NO TELEMETRY</span>
+            <strong>No usage tracking</strong>
+            <p>No accounts, analytics SDKs, or backend service.</p>
+          </div>
+          <div class="security-card">
+            <span class="security-kicker">DCO</span>
+            <strong>Contributors keep copyright</strong>
+            <p>DCO, not a CLA or copyright assignment.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section donate-section" id="donate">
+    <div class="shell">
+      <div class="donate-grid">
+        <div class="donate-copy" data-reveal>
+          <p class="eyebrow eyebrow-dark">Support</p>
+          <h2>If it saves you time</h2>
+          <p class="donate-lead">Consider buying the author a cup of tea—or topping up a few tokens.</p>
+          <p class="donate-lead">Donations are voluntary. They do not unlock features, affect issue handling, or change governance. Everything remains free and open source.</p>
+          <ul class="donate-points">
+            <li>Helps cover domains, hosting, build checks, and cross-platform testing</li>
+            <li>No paid priority support, feature locks, or roadmap control</li>
+            <li>Stars, bug reports, and testing help just as much</li>
+          </ul>
+          <div class="inline-links">
+            <a class="text-link" data-link="donate" href="https://github.com/ckern-cn/zotero-wps-bridge/blob/main/DONATE.md" target="_blank" rel="noopener">Donation details <span aria-hidden="true">→</span></a>
+            <a class="text-link" data-link="repo" href="https://github.com/ckern-cn/zotero-wps-bridge" target="_blank" rel="noopener">Star on GitHub <span aria-hidden="true">→</span></a>
+            <a class="text-link" data-link="gitee" href="https://gitee.com/ckern/zotero-wps-bridge" target="_blank" rel="noopener">Gitee mirror <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+        <div class="donate-cards" data-reveal data-reveal-delay="80">
+          <article class="donate-card donate-alipay">
+            <img src="../assets/donate/alipay-qr.png" alt="Alipay donation QR code" width="220" height="220">
+            <h3>Alipay</h3>
+            <p>Scan with the Alipay app</p>
+          </article>
+          <article class="donate-card donate-wechat">
+            <img src="../assets/donate/wechat-qr.png" alt="WeChat Pay donation QR code" width="220" height="220">
+            <h3>WeChat Pay</h3>
+            <p>Scan with WeChat</p>
+          </article>
+          <p class="donate-note">Check the recipient shown by your payment app. The QR codes are for voluntary donations only and unlock no features.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="download-section" id="download">
+    <div class="shell download-inner" data-reveal>
+      <div>
+        <p class="eyebrow">Download</p>
+        <h2>Bring Zotero into WPS</h2>
+        <p class="download-lead">Free, open source, no ads. Install in about 3 minutes.</p>
+        <div class="download-meta">
+          <span>Latest <strong data-version>latest</strong></span>
+          <span>Released <strong data-release-date>—</strong></span>
+          <span>AGPL-3.0-or-later</span>
+        </div>
+      </div>
+      <div class="download-actions">
+        <a class="button button-primary button-large" data-download="xpi" href="/downloads/zotero-wps-bridge-latest.xpi">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
+          Download Zotero plugin (.xpi)
+        </a>
+        <a class="button button-outline button-large" data-download="zip" href="/downloads/zotero-wps-bridge-addon-latest.zip">
+          Standalone WPS add-in (.zip)
+        </a>
+        <div class="download-small">
+          <a data-download="checksums" href="/downloads/SHA256SUMS.txt">SHA-256 checksums</a>
+          <a data-link="releases" href="https://github.com/ckern-cn/zotero-wps-bridge/releases" target="_blank" rel="noopener">Version history</a>
+          <a data-link="gitee" href="https://gitee.com/ckern/zotero-wps-bridge" target="_blank" rel="noopener">Gitee mirror</a>
+          <a data-link="changelog" href="https://github.com/ckern-cn/zotero-wps-bridge/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+        </div>
+        <p class="download-note">Windows and macOS are currently beta. Follow the three-step installation guide above.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="shell footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="#top">
+        <img src="../assets/icon.svg" alt="" width="38" height="38">
+        <span class="brand-text">
+          <strong>Zotero WPS Bridge</strong>
+          <small>Zotero citations in WPS Writer</small>
+        </span>
+      </a>
+      <p>Free, open source, local-first integration between Zotero and WPS Writer.</p>
+      <p class="footer-author">Maintained by <a href="https://ckern.cn/" target="_blank" rel="noopener">ckern studio</a></p>
+      <p class="footer-lang"><strong>English</strong> · <a href="../" hreflang="zh-CN">中文</a></p>
+    </div>
+    <nav class="footer-col" aria-label="Product">
+      <h3>Product</h3>
+      <a href="#features">Features</a>
+      <a href="#install">Install</a>
+      <a href="#compatibility">Compatibility</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <nav class="footer-col" aria-label="Project">
+      <h3>Project</h3>
+      <a data-link="repo" href="https://github.com/ckern-cn/zotero-wps-bridge" target="_blank" rel="noopener">GitHub source</a>
+      <a data-link="gitee" href="https://gitee.com/ckern/zotero-wps-bridge" target="_blank" rel="noopener">Gitee mirror</a>
+      <a data-link="issues" href="https://github.com/ckern-cn/zotero-wps-bridge/issues" target="_blank" rel="noopener">Issues</a>
+      <a data-link="changelog" href="https://github.com/ckern-cn/zotero-wps-bridge/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+      <a data-link="license" href="https://github.com/ckern-cn/zotero-wps-bridge/blob/main/LICENSE" target="_blank" rel="noopener">License</a>
+    </nav>
+    <nav class="footer-col" aria-label="Support">
+      <h3>Support</h3>
+      <a href="#donate">Donate</a>
+      <a data-link="security" href="https://github.com/ckern-cn/zotero-wps-bridge/blob/main/SECURITY.md" target="_blank" rel="noopener">Security</a>
+      <a data-link="updates" href="/updates.json">Update manifest</a>
+    </nav>
+  </div>
+  <div class="shell footer-bottom">
+    <p>© <span data-year>2026</span> Zotero WPS Bridge contributors · AGPL-3.0-or-later</p>
+    <p>Zotero is a trademark of the Corporation for Digital Scholarship; WPS is a trademark of Kingsoft Office Software. This project is not affiliated with either.</p>
+  </div>
+</footer>
+</body>
+</html>

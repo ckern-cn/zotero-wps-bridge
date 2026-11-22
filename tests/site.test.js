@@ -8,37 +8,17 @@ const path = require('node:path');
 const ROOT = path.join(__dirname, '..');
 const SITE = path.join(ROOT, 'site');
 const DOMAIN = 'https://zw.ckern.cn';
+const PAGES = [
+    { file: 'index.html', dir: SITE, lang: 'zh-CN' },
+    { file: 'en/index.html', dir: path.join(SITE, 'en'), lang: 'en' }
+];
 
 function read(relative) {
     return fs.readFileSync(path.join(SITE, relative), 'utf8');
 }
 
-test('landing page declares the canonical domain and metadata', () => {
-    const html = read('index.html');
-    assert.match(html, /<html lang="zh-CN">/);
-    assert.match(html, /<link rel="canonical" href="https:\/\/zw\.ckern\.cn\/">/);
-    assert.match(html, /<meta property="og:url" content="https:\/\/zw\.ckern\.cn\/">/);
-    assert.match(html, /<meta name="description" content="[^"]+"/);
-    assert.match(html, /Zotero WPS Bridge/);
-    assert.equal(fs.readFileSync(path.join(SITE, 'CNAME'), 'utf8').trim(), 'zw.ckern.cn');
-});
-
-test('landing page contains the key sections and download hooks', () => {
-    const html = read('index.html');
-    for (const id of ['features', 'install', 'compatibility', 'faq', 'open-source', 'donate', 'download']) {
-        assert.match(html, new RegExp('id="' + id + '"'), 'missing #' + id);
-    }
-    for (const key of ['xpi', 'zip', 'checksums']) {
-        assert.match(html, new RegExp('data-download="' + key + '"'),
-            'missing download hook ' + key);
-    }
-    assert.match(html, /data-version/);
-    assert.match(html, /data-link="repo"/);
-});
-
-test('all local page assets exist', () => {
-    const html = read('index.html');
-    const missing = [];
+function localTargets(html) {
+    const targets = [];
     const re = /(?:src|href)="([^"]+)"/g;
     let match;
     while ((match = re.exec(html))) {
@@ -47,16 +27,74 @@ test('all local page assets exist', () => {
                 || target.startsWith('data:')) {
             continue;
         }
-        if (!fs.existsSync(path.join(SITE, target))) {
-            missing.push(target);
+        targets.push(target);
+    }
+    return targets;
+}
+
+test('both landing pages declare the canonical domain and language alternates', () => {
+    for (const page of PAGES) {
+        const html = read(page.file);
+        assert.match(html, new RegExp('<html lang="' + page.lang + '">'));
+        const canonical = page.lang === 'en'
+            ? 'https://zw\\.ckern\\.cn/en/'
+            : 'https://zw\\.ckern\\.cn/';
+        assert.match(html, new RegExp('<link rel="canonical" href="' + canonical + '">'));
+        assert.match(html, /hreflang="zh-CN" href="https:\/\/zw\.ckern\.cn\/"/);
+        assert.match(html, /hreflang="en" href="https:\/\/zw\.ckern\.cn\/en\/"/);
+        assert.match(html, /hreflang="x-default"/);
+        assert.match(html, /<meta name="description" content="[^"]+"/);
+    }
+    assert.equal(fs.readFileSync(path.join(SITE, 'CNAME'), 'utf8').trim(), 'zw.ckern.cn');
+});
+
+test('both landing pages contain the key sections and download hooks', () => {
+    for (const page of PAGES) {
+        const html = read(page.file);
+        for (const id of ['features', 'install', 'compatibility', 'faq',
+            'open-source', 'donate', 'download']) {
+            assert.match(html, new RegExp('id="' + id + '"'),
+                page.file + ' missing #' + id);
+        }
+        for (const key of ['xpi', 'zip', 'checksums']) {
+            assert.match(html, new RegExp('data-download="' + key + '"'),
+                page.file + ' missing download hook ' + key);
+        }
+        assert.match(html, /data-version/);
+        assert.match(html, /data-link="repo"/);
+        assert.match(html, /data-link="gitee"/);
+    }
+});
+
+test('both landing pages have the donation copy and GitHub/Gitee links', () => {
+    const zh = read('index.html');
+    const en = read('en/index.html');
+    assert.match(zh, /欢迎请作者喝杯茶，或给作者加一点 Token。/);
+    assert.match(en, /consider buying the author a cup of tea—or topping up a few tokens/i);
+    assert.match(zh, /https:\/\/gitee\.com\/ckern\/zotero-wps-bridge/);
+    assert.match(en, /https:\/\/gitee\.com\/ckern\/zotero-wps-bridge/);
+    assert.match(zh, /https:\/\/github\.com\/ckern-cn\/zotero-wps-bridge/);
+    assert.match(en, /https:\/\/github\.com\/ckern-cn\/zotero-wps-bridge/);
+});
+
+test('all local page assets exist on both landing pages', () => {
+    const missing = [];
+    for (const page of PAGES) {
+        for (const target of localTargets(read(page.file))) {
+            if (!fs.existsSync(path.resolve(page.dir, target))) {
+                missing.push(page.file + ' -> ' + target);
+            }
         }
     }
     assert.deepEqual(missing, []);
 });
 
-test('page does not load remote scripts, styles, or image sources', () => {
-    const html = read('index.html');
-    assert.doesNotMatch(html, /<(?:script|link|img|source)[^>]+(?:src|href)="http:\/\//i);
+test('pages do not load remote scripts, styles, or image sources', () => {
+    for (const page of PAGES) {
+        const html = read(page.file);
+        assert.doesNotMatch(html,
+            /<(?:script|link|img|source)[^>]+(?:src|href)="http:\/\//i);
+    }
     assert.doesNotMatch(read('styles.css'), /url\(\s*['"]?http:\/\//i);
 });
 
@@ -74,16 +112,7 @@ test('site configuration points at the official domain and downloadable files', 
     assert.match(config, /xpi:\s*'\/downloads\/zotero-wps-bridge-latest\.xpi'/);
     assert.match(config, /zip:\s*'\/downloads\/zotero-wps-bridge-addon-latest\.zip'/);
     assert.match(config, /updates:\s*'\/updates\.json'/);
-});
-
-test('site build script enforces the real update URL', () => {
-    const script = fs.readFileSync(path.join(ROOT, 'scripts', 'build-site.js'), 'utf8');
-    assert.match(script, /https:\/\/zw\.ckern\.cn/);
-    assert.match(script, /UPDATE_URL/);
-    assert.match(script, /update_url/);
-    assert.match(script, /fail\(/);
-    const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
-    assert.equal(pkg.scripts['build:site'], 'node scripts/build-site.js');
+    assert.match(config, /gitee:\s*'https:\/\/gitee\.com\/ckern\/zotero-wps-bridge'/);
 });
 
 test('generated version and update manifests match the current release', () => {
@@ -101,9 +130,20 @@ test('generated version and update manifests match the current release', () => {
     assert.match(entry.update_hash, /^sha256:[a-f0-9]{64}$/);
 });
 
+test('site build script enforces the real update URL', () => {
+    const script = fs.readFileSync(path.join(ROOT, 'scripts', 'build-site.js'), 'utf8');
+    assert.match(script, /https:\/\/zw\.ckern\.cn/);
+    assert.match(script, /UPDATE_URL/);
+    assert.match(script, /update_url/);
+    assert.match(script, /fail\(/);
+    const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
+    assert.equal(pkg.scripts['build:site'], 'node scripts/build-site.js');
+});
+
 test('robots, sitemap, headers, and generated download notes are present', () => {
     assert.match(read('robots.txt'), /Sitemap: https:\/\/zw\.ckern\.cn\/sitemap\.xml/);
     assert.match(read('sitemap.xml'), /<loc>https:\/\/zw\.ckern\.cn\/<\/loc>/);
+    assert.match(read('sitemap.xml'), /<loc>https:\/\/zw\.ckern\.cn\/en\/<\/loc>/);
     assert.match(read('_headers'), /X-Content-Type-Options: nosniff/);
     assert.match(read('downloads/README.md'), /build-site\.js/);
 });
