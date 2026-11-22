@@ -9,7 +9,7 @@
 
     function version() {
         const cfg = U.getConfig();
-        return cfg.addonVersion || '0.2.3';
+        return cfg.addonVersion || '0.2.4';
     }
 
     function docId() {
@@ -208,8 +208,10 @@
     const RIBBON_KEYS = {
         zoteroTab: 'tab.zotero',
         zoteroCitations: 'group.citations',
+        zoteroBibliography: 'group.bibliography',
         zoteroNotes: 'group.notes',
         zoteroTools: 'group.tools',
+        zoteroMain: 'group.zotero',
         btnAddEditCitation: 'addEditCitation',
         btnAddEditBibliography: 'addEditBibliography',
         btnRefresh: 'refresh',

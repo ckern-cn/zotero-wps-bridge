@@ -1,0 +1,69 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui" onLoad="OnAddinLoad">
+    <ribbon startFromScratch="false">
+        <tabs>
+            <tab id="zoteroTab" label="Zotero" keytip="Z">
+                <group id="zoteroCitations" label="Citations">
+                    <button id="btnAddEditCitation" label="Insert Citation"
+                            supertip="Insert a citation at the cursor."
+                            onAction="OnAction"
+                            getEnabled="OnGetEnabled" getImage="GetImage" size="large"
+                            keytip="C"/>
+                    <button id="btnAddEditBibliography" label="Insert Bibliography"
+                            supertip="Insert a bibliography at the cursor."
+                            onAction="OnAction"
+                            getEnabled="OnGetEnabled" getImage="GetImage" size="large"
+                            keytip="B"/>
+                    <button id="btnAddNote" label="Insert Note"
+                            supertip="Insert a note from Zotero."
+                            onAction="OnAction"
+                            getEnabled="OnGetEnabled" getImage="GetImage" size="large"
+                            keytip="N"/>
+                    <button id="btnAddAnnotation" label="Insert Annotation"
+                            supertip="Insert an annotation or highlight from Zotero as a citation."
+                            onAction="OnAction"
+                            getEnabled="OnGetEnabled" getImage="GetImage" size="large"
+                            keytip="A"/>
+                </group>
+                <group id="zoteroBibliography" label="Bibliography">
+                    <button id="btnSetDocPrefs" label="Document Preferences"
+                            supertip="Change the citation style, language, and note position."
+                            onAction="OnAction"
+                            getEnabled="OnGetEnabled" getImage="GetImage" size="normal"
+                            keytip="P"/>
+                    <button id="btnRefresh" label="Update Citations and Bibliography"
+                            supertip="Update all citations and the bibliography from your Zotero library."
+                            onAction="OnAction"
+                            getEnabled="OnGetEnabled" getImage="GetImage" size="normal"
+                            keytip="R"/>
+                    <button id="btnRemoveCodes" label="Convert Citations and Bibliography"
+                            supertip="Remove Zotero field codes and keep the current text."
+                            onAction="OnAction"
+                            getEnabled="OnGetEnabled" getImage="GetImage" size="normal"
+                            keytip="U"/>
+                </group>
+                <group id="zoteroTools" label="Tools">
+                    <button id="btnCitationExplorer" label="Citation Explorer"
+                            supertip="Open Zotero Citation Explorer to review and locate citations in this document."
+                            onAction="OnAction"
+                            getEnabled="OnGetEnabled" getImage="GetImage" size="normal"
+                            keytip="X"/>
+                    <button id="btnExport" label="Export Document"
+                            supertip="Export this document for use in another word processor."
+                            onAction="OnAction"
+                            getEnabled="OnGetEnabled" getImage="GetImage" size="normal"
+                            keytip="E"/>
+                    <button id="btnCheckConnection" label="Check Connection"
+                            supertip="Check whether WPS can reach the running Zotero."
+                            onAction="OnAction"
+                            getImage="GetImage" size="normal"
+                            keytip="K"/>
+                    <button id="btnAbout" label="Help"
+                            supertip="About the Zotero WPS Bridge add-in."
+                            onAction="OnAction"
+                            getImage="GetImage" size="normal"
+                            keytip="H"/>
+                </group>
+            </tab>
+        </tabs>
+    </ribbon>
+</customUI>

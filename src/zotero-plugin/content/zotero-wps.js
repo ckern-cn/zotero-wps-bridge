@@ -14,7 +14,7 @@ var ZoteroWPSGlobal = this;
 
 var ZoteroWPS = {
     id: null,
-    version: '0.2.3',
+    version: '0.2.4',
     rootURI: null,
     token: null,
     addonFiles: null,
@@ -26,8 +26,10 @@ var ZoteroWPS = {
     ribbonKeys: {
         zoteroTab: 'tab.zotero',
         zoteroCitations: 'group.citations',
+        zoteroBibliography: 'group.bibliography',
         zoteroNotes: 'group.notes',
         zoteroTools: 'group.tools',
+        zoteroMain: 'group.zotero',
         btnAddEditCitation: 'addEditCitation',
         btnAddEditBibliography: 'addEditBibliography',
         btnRefresh: 'refresh',
@@ -911,19 +913,44 @@ var ZoteroWPS = {
             .replace(/'/g, '&apos;');
     },
 
-    localizeRibbonXml: function (xml) {
+    getRibbonLayout: function () {
+        const layout = Zotero.Prefs.get('zotero-wps.ribbonLayout') || 'current';
+        return ['current', 'endnote', 'zotero'].includes(layout) ? layout : 'current';
+    },
+
+    setRibbonLayout: async function (layout) {
+        if (!['current', 'endnote', 'zotero'].includes(layout)) {
+            layout = 'current';
+        }
+        Zotero.Prefs.set('zotero-wps.ribbonLayout', layout);
+        await this.ensureInstalled(true);
+        return layout;
+    },
+
+    getRibbonText: function (key, field, layout) {
+        if (layout && layout !== 'current') {
+            const layoutKey = 'wps.ribbon.' + key + '.' + layout + '.' + field;
+            const value = this.t(layoutKey);
+            if (value && value.indexOf('wps.ribbon.') !== 0) {
+                return value;
+            }
+        }
+        return this.t('wps.ribbon.' + key + '.' + field);
+    },
+
+    localizeRibbonXml: function (xml, layout) {
         if (!xml || !this.i18n) {
             return xml;
         }
         for (let id of Object.keys(this.ribbonKeys)) {
             const key = this.ribbonKeys[id];
-            const label = this.escapeXml(this.t('wps.ribbon.' + key + '.label'));
+            const label = this.escapeXml(this.getRibbonText(key, 'label', layout));
             const labelRe = new RegExp(
                 '(<(?:tab|group|button)\\b[^>]*\\bid="' + id + '"[^>]*?)label="[^"]*"'
             );
             xml = xml.replace(labelRe, '$1label="' + label + '"');
 
-            const tip = this.t('wps.ribbon.' + key + '.tip');
+            const tip = this.getRibbonText(key, 'tip', layout);
             if (tip && tip.indexOf('wps.ribbon.') !== 0) {
                 const tipRe = new RegExp(
                     '(<button\\b[^>]*\\bid="' + id + '"[^>]*?)supertip="[^"]*"'
@@ -935,23 +962,29 @@ var ZoteroWPS = {
     },
 
     writeRibbon: async function (target) {
-        if (!this.addonFiles || !this.addonFiles['ribbon.xml']) {
+        const layout = this.getRibbonLayout();
+        const file = layout === 'endnote'
+            ? 'ribbon-endnote.xml'
+            : layout === 'zotero'
+                ? 'ribbon-zotero.xml'
+                : 'ribbon.xml';
+        if (!this.addonFiles || !this.addonFiles[file]) {
             return;
         }
-        const bytes = this.b64ToBytes(this.addonFiles['ribbon.xml']);
+        const bytes = this.b64ToBytes(this.addonFiles[file]);
         let xml;
         try {
             xml = new TextDecoder('utf-8').decode(bytes);
         }
         catch (e) {
             try {
-                xml = decodeURIComponent(escape(atob(this.addonFiles['ribbon.xml'])));
+                xml = decodeURIComponent(escape(atob(this.addonFiles[file])));
             }
             catch (err) {
                 return;
             }
         }
-        const localized = this.localizeRibbonXml(xml);
+        const localized = this.localizeRibbonXml(xml, layout);
         await IOUtils.writeUTF8(PathUtils.join(target, 'ribbon.xml'), localized);
     },
 
@@ -1162,6 +1195,7 @@ var ZoteroWPS = {
             dirs: details,
             autoInstall: Zotero.Prefs.get('zotero-wps.autoInstall') !== false,
             keepDialogRaised: Zotero.Prefs.get('zotero-wps.keepDialogRaised') !== false,
+            ribbonLayout: this.getRibbonLayout(),
             tokenMasked: token ? token.substring(0, 6) + '…' + token.substring(token.length - 4) : '',
             locale: this.localeOverride || 'auto',
             uiLocale: this.getLocale(),

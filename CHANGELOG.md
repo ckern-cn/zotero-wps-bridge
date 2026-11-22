@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.4
+
+- 新增三套 WPS 功能区布局：当前分组布局、EndNote 风格布局、Zotero 风格布局。
+- 在 Zotero 设置 → WPS → “菜单布局”中切换；切换后需要重启 WPS 文字。
+- EndNote 风格使用“Citations / Bibliography / Tools”分组，并将刷新/转换按钮改为 EndNote 式文案。
+- Zotero 风格使用单一 Zotero 主分组：大按钮 + 文档设置/刷新/解除链接小按钮，附加工具放在 Tools 分组。
+
 ## 0.2.3
 
 - 自定义帮助/连接提示对话框移除系统标题栏，并改为铺满窗口的布局，去掉周围留白。

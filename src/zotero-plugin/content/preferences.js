@@ -62,6 +62,7 @@
         setText('zwps-autoinstall-text', T('zotero.prefs.autoInstall'));
         setText('zwps-keep-raised-text', T('zotero.prefs.keepDialogRaised'));
         setText('zwps-language-label', T('zotero.prefs.language'));
+        setText('zwps-ribbon-layout-label', T('zotero.prefs.ribbonLayout'));
         setText('zwps-help-title', T('zotero.prefs.helpTitle'));
         setText('zwps-help-1', T('zotero.prefs.help1'));
         setText('zwps-help-2', T('zotero.prefs.help2'));
@@ -84,6 +85,22 @@
             const value = option.getAttribute('value');
             if (labels[value]) {
                 option.textContent = labels[value];
+            }
+        }
+
+        const ribbonLabels = {
+            current: T('zotero.prefs.ribbonLayoutCurrent'),
+            endnote: T('zotero.prefs.ribbonLayoutEndnote'),
+            zotero: T('zotero.prefs.ribbonLayoutZotero')
+        };
+        const ribbonLayout = el('zwps-ribbon-layout');
+        const ribbonOptions = ribbonLayout
+            ? ribbonLayout.getElementsByTagName('option') : [];
+        for (let i = 0; i < ribbonOptions.length; i++) {
+            const option = ribbonOptions[i];
+            const value = option.getAttribute('value');
+            if (ribbonLabels[value]) {
+                option.textContent = ribbonLabels[value];
             }
         }
     }
@@ -186,6 +203,10 @@
             const language = el('zwps-language');
             if (language) {
                 language.value = status.locale || 'auto';
+            }
+            const ribbonLayout = el('zwps-ribbon-layout');
+            if (ribbonLayout) {
+                ribbonLayout.value = status.ribbonLayout || 'current';
             }
         }
         catch (e) {
@@ -302,6 +323,22 @@
                 }
                 finally {
                     language.disabled = false;
+                }
+            });
+        }
+
+        const ribbonLayout = el('zwps-ribbon-layout');
+        if (ribbonLayout) {
+            ribbonLayout.addEventListener('change', async function () {
+                ribbonLayout.disabled = true;
+                try {
+                    await p.setRibbonLayout(ribbonLayout.value);
+                    await refresh();
+                    Zotero.alert(null, 'Zotero WPS Bridge',
+                        T('zotero.prefs.ribbonLayoutChanged'));
+                }
+                finally {
+                    ribbonLayout.disabled = false;
                 }
             });
         }
