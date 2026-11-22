@@ -116,6 +116,10 @@
     }
 
     function alertUser(message, title) {
+        if (typeof window !== 'undefined' && window.zwpsShowMessage) {
+            window.zwpsShowMessage(title || '', message, 'info');
+            return;
+        }
         alert((title ? title + '\n\n' : '') + message);
     }
 

@@ -14,7 +14,7 @@ var ZoteroWPSGlobal = this;
 
 var ZoteroWPS = {
     id: null,
-    version: '0.2.5',
+    version: '0.2.6',
     rootURI: null,
     token: null,
     addonFiles: null,
@@ -40,6 +40,7 @@ var ZoteroWPS = {
         btnCitationExplorer: 'citationExplorer',
         btnExport: 'export',
         btnCheckConnection: 'checkConnection',
+        btnLayout: 'layout',
         btnAbout: 'about'
     },
     _origGenerateResponse: null,

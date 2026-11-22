@@ -9,7 +9,7 @@
 
     function version() {
         const cfg = U.getConfig();
-        return cfg.addonVersion || '0.2.5';
+        return cfg.addonVersion || '0.2.6';
     }
 
     function docId() {
@@ -102,14 +102,22 @@
         }
     }
 
+    function estimateDialogHeight(body) {
+        const lines = String(body || '').split('\n').reduce(function (sum, line) {
+            return sum + Math.max(1, Math.ceil(line.length / 52));
+        }, 0);
+        return Math.min(640, Math.max(250, 170 + lines * 24));
+    }
+
     function showMessageDialog(title, body, type) {
+        const heading = title || U.t('wps.dialog.noticeTitle');
         try {
             const app = typeof wps !== 'undefined' ? wps : window.Application;
             if (app && typeof app.ShowDialog === 'function' && app.PluginStorage) {
                 const key = 'zwps-dialog-' + Date.now() + '-'
                     + Math.random().toString(36).slice(2);
                 app.PluginStorage.setItem(key, JSON.stringify({
-                    title: title || 'Zotero WPS Bridge',
+                    title: heading,
                     body: body || '',
                     type: type || 'info',
                     closeLabel: U.t('wps.dialog.close')
@@ -119,9 +127,9 @@
                 const scale = Number(window.devicePixelRatio) || 1;
                 const shown = app.ShowDialog(
                     page.href,
-                    title || 'Zotero WPS Bridge',
+                    heading,
                     Math.round(560 * scale),
-                    Math.round(500 * scale),
+                    Math.round(estimateDialogHeight(body) * scale),
                     true,
                     false,
                     2
@@ -134,9 +142,11 @@
         catch (e) {
             U.debug('custom dialog failed', e);
         }
-        U.alertUser(body, title);
+        alert((heading ? heading + '\n\n' : '') + (body || ''));
         return false;
     }
+
+    window.zwpsShowMessage = showMessageDialog;
 
     function showAbout() {
         showMessageDialog(
