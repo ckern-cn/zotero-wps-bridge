@@ -202,6 +202,8 @@ test('navigation keeps a consistent link style and marks the active section', ()
     for (const page of PAGES) {
         const html = read(page.file);
         assert.doesNotMatch(html, /class="nav-cta"/);
+        assert.match(html,
+            /<nav class="site-nav"[^>]*>\s*<a href="#top">(?:首页|Home)<\/a>\s*<a href="#features">/);
         assert.match(html, /<a href="#download">/);
         assert.match(html, /class="repo-pill"[\s\S]*?class="gitee-icon"/);
         assert.match(html, /class="gitee-icon"[\s\S]*?viewBox="0 0 100 100"/);
