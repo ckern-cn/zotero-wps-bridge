@@ -136,6 +136,53 @@
         });
     }
 
+    /* Section indicator for the single-page navigation */
+    const sectionLinks = $$('.site-nav > a[href^="#"]')
+        .map(function (link) {
+            const id = link.getAttribute('href').slice(1);
+            const section = id ? document.getElementById(id) : null;
+            return section ? { link: link, section: section } : null;
+        })
+        .filter(Boolean);
+
+    let navFrame = 0;
+    function updateActiveSection() {
+        navFrame = 0;
+        if (!sectionLinks.length) {
+            return;
+        }
+        const offset = (header ? header.offsetHeight : 0) + 96;
+        let active = null;
+        for (const item of sectionLinks) {
+            if (item.section.getBoundingClientRect().top <= offset) {
+                active = item;
+            }
+        }
+        if (window.innerHeight + window.scrollY >=
+                document.documentElement.scrollHeight - 2) {
+            active = sectionLinks[sectionLinks.length - 1];
+        }
+        for (const item of sectionLinks) {
+            const current = item === active;
+            item.link.classList.toggle('is-active', current);
+            if (current) {
+                item.link.setAttribute('aria-current', 'location');
+            }
+            else {
+                item.link.removeAttribute('aria-current');
+            }
+        }
+    }
+    function requestActiveSection() {
+        if (navFrame) {
+            return;
+        }
+        navFrame = window.requestAnimationFrame(updateActiveSection);
+    }
+    window.addEventListener('scroll', requestActiveSection, { passive: true });
+    window.addEventListener('resize', requestActiveSection);
+    updateActiveSection();
+
     /* Reveal on scroll */
     const revealItems = $$('[data-reveal]');
     if (revealItems.length) {

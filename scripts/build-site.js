@@ -52,13 +52,18 @@ if (!fs.existsSync(SITE)) {
 }
 fs.mkdirSync(DOWNLOADS, { recursive: true });
 
-/* Keep the cache-busting query on shared assets in sync with the release. */
+/* Keep the cache-busting query on shared assets in sync with both the
+ * release version and the actual asset contents. */
+const assetVersion = version + '-' + ['styles.css', 'config.js', 'app.js']
+    .map((file) => sha256(path.join(SITE, file)).slice(0, 8))
+    .join('-');
+
 for (const relative of ['index.html', path.join('en', 'index.html')]) {
     const file = path.join(SITE, relative);
     const html = fs.readFileSync(file, 'utf8');
     const updated = html.replace(
         /(styles\.css|config\.js|app\.js)\?v=[0-9A-Za-z.-]+/g,
-        '$1?v=' + version);
+        '$1?v=' + assetVersion);
     if (updated !== html) {
         fs.writeFileSync(file, updated);
     }

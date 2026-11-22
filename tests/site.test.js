@@ -128,7 +128,8 @@ test('site configuration points at the official domain and downloadable files', 
     for (const page of PAGES) {
         const html = read(page.file);
         for (const asset of ['styles.css', 'config.js', 'app.js']) {
-            assert.match(html, new RegExp(asset.replace('.', '\\.') + '\\?v=' + escaped),
+            assert.match(html,
+                new RegExp(asset.replace('.', '\\.') + '\\?v=' + escaped + '-[0-9a-f-]+'),
                 page.file + ' should cache-bust ' + asset);
         }
     }
@@ -195,4 +196,21 @@ test('the analytics tag sits before </body> and referrers are allowed', () => {
     const nginx = fs.readFileSync(
         path.join(ROOT, 'deploy', 'nginx-zw.ckern.cn.conf'), 'utf8');
     assert.doesNotMatch(nginx, /Referrer-Policy\s+no-referrer/i);
+});
+
+test('navigation keeps a consistent link style and marks the active section', () => {
+    for (const page of PAGES) {
+        const html = read(page.file);
+        assert.doesNotMatch(html, /class="nav-cta"/);
+        assert.match(html, /<a href="#download">/);
+        assert.match(html, /class="repo-pill"[\s\S]*?class="gitee-icon"/);
+        assert.match(html, /class="gitee-icon"[\s\S]*?viewBox="0 0 100 100"/);
+    }
+    const styles = read('styles.css');
+    assert.doesNotMatch(styles, /\.nav-cta/);
+    assert.match(styles, /\.site-nav > a\.is-active::after/);
+    assert.match(styles, /\.gitee-icon \{/);
+    const js = read('app.js');
+    assert.match(js, /updateActiveSection/);
+    assert.match(js, /aria-current/);
 });

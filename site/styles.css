@@ -219,7 +219,7 @@ code {
     color: #fff;
 }
 
-.site-nav > a:not(.nav-cta):not(.nav-icon)::after {
+.site-nav > a[href^="#"]::after {
     content: "";
     position: absolute;
     left: 0;
@@ -233,22 +233,16 @@ code {
     transition: transform 0.2s ease;
 }
 
-.site-nav > a:not(.nav-cta):not(.nav-icon):hover::after {
+.site-nav > a[href^="#"]:hover::after {
     transform: scaleX(1);
 }
 
-.nav-cta {
-    padding: 8px 18px;
-    border-radius: 999px;
-    background: #cf3f37;
-    color: #fff !important;
-    box-shadow: 0 8px 20px rgba(232, 79, 69, 0.28);
-    transition: transform 0.2s ease, background 0.2s ease;
+.site-nav > a.is-active {
+    color: var(--teal-bright);
 }
 
-.nav-cta:hover {
-    background: #b5342d;
-    transform: translateY(-1px);
+.site-nav > a.is-active::after {
+    transform: scaleX(1);
 }
 
 .lang-link {
@@ -271,8 +265,9 @@ code {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 7px;
     height: 30px;
-    padding: 0 12px;
+    padding: 0 11px 0 9px;
     border: 1px solid rgba(255, 255, 255, 0.24);
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.06);
@@ -287,6 +282,12 @@ code {
     color: #fff;
     border-color: rgba(53, 216, 198, 0.55);
     background: rgba(53, 216, 198, 0.12);
+}
+
+.gitee-icon {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
 }
 
 .lang-link:hover {
@@ -1806,7 +1807,7 @@ code {
         gap: 0;
         padding: 14px 20px 24px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(7, 21, 34, 0.98);
+        background: var(--navy-900);
         box-shadow: 0 24px 40px rgba(0, 0, 0, 0.3);
     }
 
@@ -1819,13 +1820,20 @@ code {
         border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     }
 
-    .site-nav > a:not(.nav-cta):not(.nav-icon)::after {
+    .site-nav > a[href^="#"]::after {
         display: none;
     }
 
-    .nav-cta {
-        margin-top: 12px;
-        text-align: center;
+    .site-nav > a.is-active::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 0;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--teal-bright);
+        transform: translateY(-50%);
     }
 
     .lang-link {
