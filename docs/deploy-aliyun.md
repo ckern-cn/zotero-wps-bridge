@@ -3,24 +3,26 @@
 目标域名：`https://zw.ckern.cn/`  
 当前 DNS：`zw.ckern.cn -> 47.243.7.75`
 
-## 当前服务器检查结果
+## 当前部署状态
 
-- 443 端口可建立 TLS 连接，证书为 `CN=ckern.cn`（Let's Encrypt）
-- HTTP/1.1、HTTP/2 请求均返回空响应
-- 22 / 2222 / 22022 等 SSH 端口当前不可达
-- 需要先在阿里云轻量服务器控制台确认：
-  - SSH 端口和防火墙/安全组
-  - Nginx 是否已配置 `zw.ckern.cn` 的 server block
-  - Web 根目录，例如 `/webapps/zw.ckern.cn`
+2026-11-22 已完成部署：
 
-在拿到 SSH 访问前，无法安全地直接上传。
+- SSH：`ssh -p 12306 -l root ckern.cn`（密钥登录）
+- Web 根目录：`/webapps/zw.ckern.cn`
+- Nginx 配置：`/etc/nginx/apps/zw.ckern.cn.conf`
+- 启动链接：`/etc/nginx/apps.enabled/zw.ckern.cn.conf`
+- 证书：`/etc/nginx/ssl/ckern.cn/cert.pem`（SAN 包含 `*.ckern.cn`）
+- `https://zw.ckern.cn/`、`/en/`、`/updates.json` 和安装包均已验证返回 200
+- HTTP/2 正常，`updates.json` 的 SHA-256 与实际 XPI 一致
+
+当前 `80/tcp` 在服务器 firewalld 中已放行，但从外网访问仍超时，需要在阿里云轻量服务器控制台的安全组中放行 80，才能完成 HTTP → HTTPS 跳转和部分 ACME 校验。
 
 ## 一键部署（拿到 SSH 后）
 
 ```bash
 DEPLOY_HOST=47.243.7.75 \
 DEPLOY_USER=root \
-DEPLOY_PORT=22 \
+DEPLOY_PORT=12306 \
 DEPLOY_PATH=/webapps/zw.ckern.cn \
 npm run deploy:site
 ```
