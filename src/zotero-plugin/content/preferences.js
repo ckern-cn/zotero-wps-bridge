@@ -149,6 +149,7 @@
         setText('zwps-help-3', T('zotero.prefs.help3'));
         setText('zwps-help-4', T('zotero.prefs.help4'));
         setText('zwps-note', T('zotero.prefs.note'));
+        setText('zwps-studio', T('zotero.prefs.studio'));
         setText('zwps-reset-token', T('zotero.prefs.resetToken'));
         setText('zwps-reset-hint', T('zotero.prefs.resetHint'));
 

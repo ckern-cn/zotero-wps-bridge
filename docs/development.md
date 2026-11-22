@@ -70,6 +70,20 @@ WPS 的加载项页面由 WPS 自动生成的 `index.html` 打开；本项目显
 
 Zotero 插件在启动时会自动重装同版本的 WPS 文件；如果正在做加载项热调试，可以暂时在 Zotero 设置中取消“启动 Zotero 时自动检查并更新”。
 
+## 静态官网
+
+官网源码在 [`../site/`](../site/)，域名 `https://zw.ckern.cn/`。发布包和更新清单由脚本生成：
+
+```bash
+UPDATE_URL='https://zw.ckern.cn/updates.json' \
+UPDATE_LINK_BASE='https://zw.ckern.cn/downloads/' \
+npm run build
+
+npm run build:site
+```
+
+详细部署方式（Cloudflare Pages / GitHub Pages、DNS、`updates.json`）见 [`../site/README.md`](../site/README.md)。
+
 ## 单元测试
 
 ```bash
@@ -89,6 +103,7 @@ npm test
 - 设置页翻译键、元素 ID、语言/布局选项与危险操作确认
 - 版本号、插件 ID、兼容版本范围与 `update_url` 元数据
 - 文档中的相对链接与当前版本号
+- 静态官网的域名、下载挂钩、资源引用和更新地址检查
 
 人工 GUI 回归请使用 [`gui-test-checklist.md`](gui-test-checklist.md)。当前阶段不配置 CI/自动发布流程。
 

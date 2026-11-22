@@ -4,6 +4,9 @@ dist/
 *.xpi
 *.zip
 *.log
+site/downloads/*.xpi
+site/downloads/*.zip
+site/downloads/SHA256SUMS.txt
 .DS_Store
 Thumbs.db
 .idea/

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Zotero WPS Bridge monogram icon">
+  <defs>
+    <linearGradient id="bg" x1="56" y1="32" x2="456" y2="480" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0a1b2c"/>
+      <stop offset="0.58" stop-color="#102e45"/>
+      <stop offset="1" stop-color="#0a2033"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="translate(256 214) rotate(90) scale(300)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2cc7b5" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#2cc7b5" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="zGrad" x1="90" y1="180" x2="222" y2="344" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff8a7e"/>
+      <stop offset="1" stop-color="#e84f45"/>
+    </linearGradient>
+    <linearGradient id="wGrad" x1="238" y1="344" x2="422" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1fa99b"/>
+      <stop offset="1" stop-color="#35d8c6"/>
+    </linearGradient>
+    <linearGradient id="deck" x1="92" y1="390" x2="420" y2="390" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2cc7b5" stop-opacity="0.55"/>
+      <stop offset="0.5" stop-color="#f7fbff" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#ff6b5e" stop-opacity="0.55"/>
+    </linearGradient>
+    <filter id="glowText" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#020a12" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#bg)"/>
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#glow)"/>
+  <rect x="17" y="17" width="478" height="478" rx="111" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="2"/>
+
+  <!-- Z -->
+  <path d="M 86 184 C 122 177 176 175 218 180 C 223 181 224 186 219 189 C 186 236 144 292 100 338 C 94 345 97 350 105 351 C 140 355 180 355 218 351"
+        fill="none" stroke="url(#zGrad)" stroke-width="38"
+        stroke-linecap="round" stroke-linejoin="round" filter="url(#glowText)"/>
+
+  <!-- W -->
+  <path d="M 260 184 C 270 228 281 292 291 344 C 296 354 307 350 312 334 C 320 300 328 252 335 228 C 340 214 349 214 354 228 C 362 254 370 300 378 344 C 383 354 394 350 399 334 C 407 288 414 228 418 184"
+        fill="none" stroke="url(#wGrad)" stroke-width="36"
+        stroke-linecap="round" stroke-linejoin="round" filter="url(#glowText)"/>
+
+  <!-- minimal bridge deck beneath the monogram -->
+  <path d="M 90 392 Q 256 362 420 392"
+        fill="none" stroke="url(#deck)" stroke-width="12" stroke-linecap="round"/>
+</svg>

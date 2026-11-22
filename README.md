@@ -2,6 +2,10 @@
 
 在 **WPS 文字** 中使用 **Zotero** 插入、编辑和刷新引文与参考文献。
 
+> 官方网站：<https://zw.ckern.cn/>
+>
+> 源码、安装包和更新清单均以官方站点与仓库发布页为准。
+
 这是一个“原生”集成方案，不需要安装 Python、Node 或其他本地代理进程：
 
 - **Zotero 插件**（`.xpi`）：在 Zotero 的本地 HTTP 服务上提供 `/wps/*` 桥接接口，并自动把 WPS 加载项安装到 WPS 的 `jsaddons` 目录。
@@ -140,6 +144,14 @@ npm test
 - `dist/zotero-wps-bridge-addon-<version>.zip`：独立 WPS 加载项（手动安装/开发调试用）
 - `dist/SHA256SUMS.txt`
 
+发布官网（`site/`）时，还需运行：
+
+```bash
+npm run build:site
+```
+
+该命令会把 XPI/ZIP、`updates.json` 和 `version.json` 复制到 `site/`。官网部署说明见 [`site/README.md`](site/README.md)。
+
 ### 自动更新
 
 > 源码中的 `update_url` 是 `.invalid` 占位地址，仅用于让本地构建可以通过 Zotero 10 的安装校验。正式发布必须设置 `UPDATE_URL`，否则不会产生可用的自动更新。
@@ -190,6 +202,7 @@ src/
 scripts/build.js            # 打包 .xpi / .zip
 tests/                      # Node 单元测试
 docs/                       # 架构、协议、安装、更新、GUI 测试
+site/                       # 静态官网（zw.ckern.cn）
 artwork/                    # 图标源文件与导出图
 .github/                    # issue/PR 模板与捐赠配置
 CHANGELOG.md                # 版本变更记录
@@ -246,6 +259,10 @@ CODE_OF_CONDUCT.md          # 行为准则
 官方版本只通过本仓库 README 公布的渠道发布。代码按 AGPL-3.0-or-later 开放，允许 fork 和修改，但项目名称、图标和官方发布渠道由项目所有者管理；fork 必须使用自己的名称、图标、插件 ID 和更新地址。
 
 详见 [`TRADEMARK.md`](TRADEMARK.md) 和 [`GOVERNANCE.md`](GOVERNANCE.md)。
+
+## 工作室
+
+本项目由 [ckern studio](https://ckern.cn/) 维护。ckern 是一家只做本地优先软件的独立工作室。
 
 ## 致谢与许可证
 
