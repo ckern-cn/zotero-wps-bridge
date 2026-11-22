@@ -97,7 +97,7 @@ Zotero 的 `RequestHandler` 默认只对 `https://www.zotero.org` 返回 CORS �
       port: 23119,
       token: "...",
       locale: "zh-CN",
-      addonVersion: "0.2.4"
+      addonVersion: "0.2.5"
   };
   ```
 

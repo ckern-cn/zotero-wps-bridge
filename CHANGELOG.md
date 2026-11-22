@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.5
+
+- 新增 WPS 功能区“切换布局”按钮：无需打开 Zotero 设置，直接在 WPS 的 Zotero 选项卡中切换三套布局。
+- 切换布局后通过 `/wps/layout` 写回 `ribbon.xml` 和 `config.js`，完全退出并重启 WPS 后生效。
+- 偏好面板增加插件就绪重试，并按 Zotero 实际应用语言选择中文/英文，修复设置页主要显示英文的问题。
+
 ## 0.2.4
 
 - 新增三套 WPS 功能区布局：当前分组布局、EndNote 风格布局、Zotero 风格布局。

@@ -68,6 +68,8 @@
             'wps.ribbon.checkConnection.label': 'Check Connection',
             'wps.ribbon.checkConnection.tip': 'Check whether WPS can reach the running Zotero.',
             'wps.ribbon.about.label': 'Help',
+            'wps.ribbon.layout.label': 'Switch Layout',
+            'wps.ribbon.layout.tip': 'Switch between the current, EndNote-style, and Zotero-style ribbon layouts. Restart WPS after switching.',
             'wps.ribbon.about.tip': 'About the Zotero WPS Bridge add-in.',
 
             'wps.alert.busy': 'Zotero is still processing the previous request. Please wait.',
@@ -90,6 +92,8 @@
             'wps.dialog.connectionFailedTitle': 'Cannot connect to Zotero',
             'wps.dialog.unlinkTitle': 'Cannot unlink citations',
             'wps.dialog.close': 'Close',
+            'wps.dialog.layoutTitle': 'Ribbon layout',
+            'wps.alert.layoutChanged': 'Ribbon layout changed to: {layout}\n\nFully quit and restart WPS Writer to apply it.',
             'wps.confirm.removeCodes': 'Remove all Zotero citations from this document?\n\nThe field codes will be deleted, but the displayed text will remain. This cannot be undone.\n\nZotero must remain running until the operation completes.',
 
             'wps.error.busyOtherDoc': 'Zotero is processing a citation transaction for another document. Finish or cancel it in Zotero first.',
@@ -220,6 +224,8 @@
             'wps.ribbon.checkConnection.label': '检查连接',
             'wps.ribbon.checkConnection.tip': '检查 WPS 是否能连接正在运行的 Zotero。',
             'wps.ribbon.about.label': '帮助',
+            'wps.ribbon.layout.label': '切换布局',
+            'wps.ribbon.layout.tip': '在当前分组、EndNote 风格和 Zotero 风格之间切换。切换后需要重启 WPS。',
             'wps.ribbon.about.tip': '关于 Zotero WPS Bridge 加载项。',
 
             'wps.alert.busy': 'Zotero 正在处理上一个请求，请稍候。',
@@ -242,6 +248,8 @@
             'wps.dialog.connectionFailedTitle': '无法连接 Zotero',
             'wps.dialog.unlinkTitle': '无法解除链接',
             'wps.dialog.close': '关闭',
+            'wps.dialog.layoutTitle': '菜单布局',
+            'wps.alert.layoutChanged': '菜单布局已切换为：{layout}\n\n请完全退出并重新启动 WPS 文字以生效。',
             'wps.confirm.removeCodes': '确定要解除文档中的所有 Zotero 引用吗？\n\n此操作会删除域代码，但保留当前显示的文字，且不可撤销。\n\n操作完成前需要保持 Zotero 运行。',
 
             'wps.error.busyOtherDoc': 'Zotero 正在处理另一个文档的引用事务。请先在 Zotero 中完成或取消当前操作。',
@@ -372,6 +380,8 @@
             'wps.ribbon.checkConnection.label': '檢查連線',
             'wps.ribbon.checkConnection.tip': '檢查 WPS 是否能連線到正在執行的 Zotero。',
             'wps.ribbon.about.label': '說明',
+            'wps.ribbon.layout.label': '切換版面',
+            'wps.ribbon.layout.tip': '在目前分組、EndNote 風格和 Zotero 風格之間切換。切換後需要重新啟動 WPS。',
             'wps.ribbon.about.tip': '關於 Zotero WPS Bridge 增益集。',
 
             'wps.alert.busy': 'Zotero 正在處理上一個要求，請稍候。',
@@ -394,6 +404,8 @@
             'wps.dialog.connectionFailedTitle': '無法連線到 Zotero',
             'wps.dialog.unlinkTitle': '無法解除連結',
             'wps.dialog.close': '關閉',
+            'wps.dialog.layoutTitle': '功能表版面',
+            'wps.alert.layoutChanged': '功能表版面已切換為：{layout}\n\n請完全結束並重新啟動 WPS 文字以生效。',
             'wps.confirm.removeCodes': '確定要解除文件中的所有 Zotero 引用嗎？\n\n此操作會刪除功能變數代碼，但保留目前顯示的文字，且無法復原。\n\n操作完成前需要保持 Zotero 執行。',
 
             'wps.error.busyOtherDoc': 'Zotero 正在處理另一份文件的引用交易。請先在 Zotero 中完成或取消目前操作。',

@@ -6,5 +6,6 @@ window.ZOTERO_WPS_CONFIG = {
     port: 23119,
     token: '',
     locale: 'auto',
-    addonVersion: '0.2.4'
+    ribbonLayout: 'current',
+    addonVersion: '0.2.5'
 };

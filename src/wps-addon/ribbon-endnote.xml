@@ -57,6 +57,11 @@
                             onAction="OnAction"
                             getImage="GetImage" size="normal"
                             keytip="K"/>
+                    <button id="btnLayout" label="Switch Layout"
+                            supertip="Switch between the current, EndNote-style, and Zotero-style ribbon layouts. Restart WPS after switching."
+                            onAction="OnAction"
+                            getImage="GetImage" size="normal"
+                            keytip="L"/>
                     <button id="btnAbout" label="Help"
                             supertip="About the Zotero WPS Bridge add-in."
                             onAction="OnAction"

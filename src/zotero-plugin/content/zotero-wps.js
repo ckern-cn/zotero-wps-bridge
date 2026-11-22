@@ -14,7 +14,7 @@ var ZoteroWPSGlobal = this;
 
 var ZoteroWPS = {
     id: null,
-    version: '0.2.4',
+    version: '0.2.5',
     rootURI: null,
     token: null,
     addonFiles: null,
@@ -148,18 +148,28 @@ var ZoteroWPS = {
         if (this.localeOverride && this.localeOverride !== 'auto') {
             return this.localeOverride;
         }
-        try {
-            if (Zotero.locale) {
-                return Zotero.locale;
-            }
-        }
-        catch (e) {}
+        const candidates = [];
         try {
             if (Services.locale && Services.locale.appLocaleAsBCP47) {
-                return Services.locale.appLocaleAsBCP47;
+                candidates.push(Services.locale.appLocaleAsBCP47);
             }
         }
         catch (e) {}
+        try {
+            if (Zotero.locale) {
+                candidates.push(Zotero.locale);
+            }
+        }
+        catch (e) {}
+        try {
+            candidates.push(Zotero.Prefs.get('intl.accept_languages'));
+        }
+        catch (e) {}
+        for (let candidate of candidates) {
+            if (this.i18n && this.i18n.normalizeLocale(candidate)) {
+                return this.i18n.normalizeLocale(candidate);
+            }
+        }
         return 'en-US';
     },
 
@@ -449,6 +459,37 @@ var ZoteroWPS = {
                     }
                     catch (err) {}
                 }
+            }
+        };
+
+        Reg('/wps/layout', function () {});
+        Zotero.Server.Endpoints['/wps/layout'].prototype = {
+            supportedMethods: ['POST'],
+            supportedDataTypes: ['application/json'],
+            allowRequestsFromUnsafeWebContent: true,
+            init(data, sendResponse) {
+                data = ZoteroWPS.parseBody(data);
+                if (!ZoteroWPS.validToken(data && data.token)) {
+                    sendResponse(403, 'text/plain', 'Invalid token');
+                    return;
+                }
+                const layout = data && data.layout;
+                if (!['current', 'endnote', 'zotero'].includes(layout)) {
+                    sendResponse(400, 'text/plain', 'Invalid layout');
+                    return;
+                }
+                ZoteroWPS.setRibbonLayout(layout).then(function () {
+                    sendResponse(200, 'application/json', JSON.stringify({
+                        ok: true,
+                        layout: layout
+                    }));
+                }).catch(function (e) {
+                    Zotero.logError(e);
+                    try {
+                        sendResponse(500, 'text/plain', 'Failed to change layout: ' + e.message);
+                    }
+                    catch (err) {}
+                });
             }
         };
 
@@ -997,6 +1038,7 @@ var ZoteroWPS = {
                 port: port,
                 token: this.token,
                 locale: this.getLocale(),
+                ribbonLayout: this.getRibbonLayout(),
                 addonVersion: this.version
             }, null, 4)
             + ';\n';

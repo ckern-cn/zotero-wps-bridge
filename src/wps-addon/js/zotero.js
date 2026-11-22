@@ -39,6 +39,10 @@
         }
     };
 
+    Client.prototype.setLayout = function (layout) {
+        return this.request('/wps/layout', { layout: layout });
+    };
+
     Client.prototype.respond = function (payload) {
         return this.request('/wps/respond', { payload: payload });
     };

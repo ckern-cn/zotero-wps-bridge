@@ -9,7 +9,7 @@
 
     function version() {
         const cfg = U.getConfig();
-        return cfg.addonVersion || '0.2.4';
+        return cfg.addonVersion || '0.2.5';
     }
 
     function docId() {
@@ -159,6 +159,39 @@
         }
     }
 
+    function switchLayout() {
+        const order = ['current', 'endnote', 'zotero'];
+        const current = U.getConfig().ribbonLayout || 'current';
+        const index = Math.max(0, order.indexOf(current));
+        const next = order[(index + 1) % order.length];
+        const labels = {
+            current: 'zotero.prefs.ribbonLayoutCurrent',
+            endnote: 'zotero.prefs.ribbonLayoutEndnote',
+            zotero: 'zotero.prefs.ribbonLayoutZotero'
+        };
+        try {
+            const response = window.ZoteroWPSClient.create('layout').setLayout(next);
+            if (response.status === 200 && response.json && response.json.ok) {
+                U.getConfig().ribbonLayout = next;
+                showMessageDialog(
+                    U.t('wps.dialog.layoutTitle'),
+                    U.t('wps.alert.layoutChanged', {
+                        layout: U.t(labels[next])
+                    }),
+                    'success'
+                );
+                return;
+            }
+            U.alertUser(U.t('wps.error.http', {
+                status: response.status,
+                text: response.text || ''
+            }));
+        }
+        catch (e) {
+            U.alertUser(U.t('wps.alert.cannotConnect'));
+        }
+    }
+
     function confirmUnlink() {
         if (!U.getConfig().token) {
             showMessageDialog(
@@ -222,6 +255,7 @@
         btnCitationExplorer: 'citationExplorer',
         btnExport: 'export',
         btnCheckConnection: 'checkConnection',
+        btnLayout: 'layout',
         btnAbout: 'about'
     };
 
@@ -269,6 +303,9 @@
             case 'btnCheckConnection':
                 checkConnection();
                 break;
+            case 'btnLayout':
+                switchLayout();
+                break;
             case 'btnAbout':
                 showAbout();
                 break;
@@ -300,6 +337,7 @@
             btnExport: 'images/export.svg',
             btnRemoveCodes: 'images/unlink.svg',
             btnCheckConnection: 'images/link.svg',
+            btnLayout: 'images/settings.svg',
             btnAbout: 'images/info.svg'
         };
         return images[id] || 'images/info.svg';

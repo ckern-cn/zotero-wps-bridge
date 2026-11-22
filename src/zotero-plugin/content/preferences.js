@@ -375,16 +375,25 @@
         }
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function () {
-            applyStaticText();
-            bind();
-            refresh();
-        });
-    }
-    else {
+    let initAttempts = 0;
+
+    function init() {
+        // The preference pane can be opened before the plugin has finished
+        // assigning Zotero.ZoteroWPS. Retry briefly instead of leaving the
+        // static English markup in place.
+        if (!plugin() && initAttempts++ < 40) {
+            setTimeout(init, 250);
+            return;
+        }
         applyStaticText();
         bind();
         refresh();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    }
+    else {
+        init();
     }
 })();
