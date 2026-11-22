@@ -119,9 +119,21 @@ site/
   manifest.webmanifest
   robots.txt
   sitemap.xml
-  assets/             图标与功能区图标
+  assets/             图标、功能区图标、捐赠二维码
   downloads/          构建生成的安装包（不提交二进制）
 ```
+
+## 捐赠二维码
+
+`assets/donate/` 中的二维码是从 `pay/` 原始收款截图裁剪而来：
+
+- 只保留二维码和四周白色静区；
+- 移除手机截图中的横幅、Logo、说明文字和收款人名称；
+- 保留原始分辨率，网页显示时再缩小；
+- 原始截图在 `.gitignore` 中忽略，不提交到仓库。
+
+更换收款码后，重新裁剪并替换 `assets/donate/alipay-qr.png`、
+`assets/donate/wechat-qr.png`，然后用手机分别扫码验证。
 
 ## 注意
 

@@ -1226,6 +1226,113 @@ code {
 }
 
 /* --------------------------------------------------------------------------
+ * Donation
+ * ----------------------------------------------------------------------- */
+
+.donate-section {
+    border-top: 1px solid var(--line);
+    background: var(--paper);
+}
+
+.donate-grid {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    align-items: center;
+    gap: 56px;
+}
+
+.donate-copy h2 {
+    margin: 0;
+    font-size: clamp(1.8rem, 3.2vw, 2.7rem);
+    font-weight: 750;
+    line-height: 1.2;
+    letter-spacing: -0.035em;
+}
+
+.donate-lead {
+    margin: 16px 0 0;
+    color: var(--muted);
+    font-size: 14.5px;
+    line-height: 1.8;
+}
+
+.donate-points {
+    margin: 20px 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--muted);
+    font-size: 13.5px;
+    line-height: 1.8;
+}
+
+.donate-points li {
+    position: relative;
+    padding-left: 20px;
+}
+
+.donate-points li + li {
+    margin-top: 5px;
+}
+
+.donate-points li::before {
+    content: "";
+    position: absolute;
+    top: 0.7em;
+    left: 2px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+}
+
+.donate-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.donate-card {
+    padding: 16px 16px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+}
+
+.donate-card img {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+    margin: 0 auto 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+}
+
+.donate-card h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.donate-card p {
+    margin: 3px 0 0;
+    color: var(--muted);
+    font-size: 11.5px;
+    line-height: 1.5;
+}
+
+.donate-note {
+    grid-column: 1 / -1;
+    margin: 2px 0 0;
+    color: var(--muted-light);
+    font-size: 11.5px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+/* --------------------------------------------------------------------------
  * Download
  * ----------------------------------------------------------------------- */
 
@@ -1492,6 +1599,7 @@ code {
     }
 
     .open-source-grid,
+    .donate-grid,
     .download-inner {
         grid-template-columns: 1fr;
         gap: 34px;
@@ -1692,6 +1800,20 @@ code {
     }
 
     .footer-bottom p:last-child {
+        text-align: left;
+    }
+}
+
+@media (max-width: 520px) {
+    .donate-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .donate-card img {
+        max-width: 260px;
+    }
+
+    .donate-note {
         text-align: left;
     }
 }

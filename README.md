@@ -249,6 +249,7 @@ CODE_OF_CONDUCT.md          # 行为准则
 
 项目不设付费版，捐赠不解锁功能。若项目对你有帮助且有余力，可以自愿捐赠；不捐赠也完全不影响使用、issue 处理或功能完整性。
 
+- 官方捐赠页：<https://zw.ckern.cn/#donate>（支付宝 / 微信支付）
 - 捐赠说明：[`DONATE.md`](DONATE.md)
 - 支持范围：[`SUPPORT.md`](SUPPORT.md)
 

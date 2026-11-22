@@ -25,7 +25,7 @@ test('landing page declares the canonical domain and metadata', () => {
 
 test('landing page contains the key sections and download hooks', () => {
     const html = read('index.html');
-    for (const id of ['features', 'install', 'compatibility', 'faq', 'open-source', 'download']) {
+    for (const id of ['features', 'install', 'compatibility', 'faq', 'open-source', 'donate', 'download']) {
         assert.match(html, new RegExp('id="' + id + '"'), 'missing #' + id);
     }
     for (const key of ['xpi', 'zip', 'checksums']) {
@@ -58,6 +58,14 @@ test('page does not load remote scripts, styles, or image sources', () => {
     const html = read('index.html');
     assert.doesNotMatch(html, /<(?:script|link|img|source)[^>]+(?:src|href)="http:\/\//i);
     assert.doesNotMatch(read('styles.css'), /url\(\s*['"]?http:\/\//i);
+});
+
+test('donation QR images are bundled with the site', () => {
+    for (const name of ['alipay-qr.png', 'wechat-qr.png']) {
+        const file = path.join(SITE, 'assets', 'donate', name);
+        assert.ok(fs.existsSync(file), name + ' should exist');
+        assert.ok(fs.statSync(file).size > 10 * 1024, name + ' should be high resolution');
+    }
 });
 
 test('site configuration points at the official domain and downloadable files', () => {
