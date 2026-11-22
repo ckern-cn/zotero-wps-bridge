@@ -774,6 +774,7 @@ var ZoteroWPS = {
         const required = [
             'manifest.xml',
             'ribbon.xml',
+            'dialog.html',
             'js/app.js',
             'js/config.js',
             'js/i18n.js',

@@ -42,7 +42,11 @@
         catch (e) {
             U.debug('transaction failed', command, e);
             if (e.isNetworkError) {
-                U.alertUser(U.t('wps.alert.network'));
+                showMessageDialog(
+                    U.t('wps.dialog.connectionFailedTitle'),
+                    U.t('wps.alert.network'),
+                    'error'
+                );
             }
             else if (e.userFacing) {
                 U.alertUser(e.message);
@@ -68,26 +72,76 @@
             const response = window.ZoteroWPSClient.create('ping').ping();
             if (response.status === 200 && response.json && response.json.ok) {
                 const info = response.json;
-                U.alertUser(U.t('wps.alert.connected', {
-                    zoteroVersion: info.zoteroVersion || U.t('wps.alert.tokenMissing'),
-                    bridgeVersion: info.version || U.t('wps.alert.tokenMissing'),
-                    port: info.port || U.getURLBase().replace(/^.*:/, ''),
-                    token: U.getConfig().token
-                        ? U.t('wps.alert.tokenConfigured')
-                        : U.t('wps.alert.tokenMissing')
-                }));
+                showMessageDialog(
+                    U.t('wps.dialog.connectionOkTitle'),
+                    U.t('wps.alert.connected', {
+                        zoteroVersion: info.zoteroVersion || U.t('wps.alert.tokenMissing'),
+                        bridgeVersion: info.version || U.t('wps.alert.tokenMissing'),
+                        port: info.port || U.getURLBase().replace(/^.*:/, ''),
+                        token: U.getConfig().token
+                            ? U.t('wps.alert.tokenConfigured')
+                            : U.t('wps.alert.tokenMissing')
+                    }),
+                    'success'
+                );
             }
             else {
-                U.alertUser(U.t('wps.alert.bridgeNotReady', { status: response.status }));
+                showMessageDialog(
+                    U.t('wps.dialog.connectionFailedTitle'),
+                    U.t('wps.alert.bridgeNotReady', { status: response.status }),
+                    'warning'
+                );
             }
         }
         catch (e) {
-            U.alertUser(U.t('wps.alert.cannotConnect'));
+            showMessageDialog(
+                U.t('wps.dialog.connectionFailedTitle'),
+                U.t('wps.alert.cannotConnect'),
+                'error'
+            );
         }
     }
 
+    function showMessageDialog(title, body, type) {
+        try {
+            const app = typeof wps !== 'undefined' ? wps : window.Application;
+            if (app && typeof app.ShowDialog === 'function' && app.PluginStorage) {
+                const key = 'zwps-dialog-' + Date.now() + '-'
+                    + Math.random().toString(36).slice(2);
+                app.PluginStorage.setItem(key, JSON.stringify({
+                    title: title || 'Zotero WPS Bridge',
+                    body: body || '',
+                    type: type || 'info',
+                    closeLabel: U.t('wps.dialog.close')
+                }));
+                const page = new URL('dialog.html', window.location.href);
+                page.searchParams.set('key', key);
+                const scale = Number(window.devicePixelRatio) || 1;
+                const shown = app.ShowDialog(
+                    page.href,
+                    title || 'Zotero WPS Bridge',
+                    Math.round(560 * scale),
+                    Math.round(500 * scale),
+                    true
+                );
+                if (shown !== false) {
+                    return true;
+                }
+            }
+        }
+        catch (e) {
+            U.debug('custom dialog failed', e);
+        }
+        U.alertUser(body, title);
+        return false;
+    }
+
     function showAbout() {
-        U.alertUser(U.t('wps.alert.about', { version: version() }));
+        showMessageDialog(
+            U.t('wps.dialog.helpTitle'),
+            U.t('wps.alert.about', { version: version() }),
+            'info'
+        );
     }
 
     function isBridgeReachable() {
@@ -105,11 +159,19 @@
 
     function confirmUnlink() {
         if (!U.getConfig().token) {
-            U.alertUser(U.t('wps.alert.unlinkNoToken'));
+            showMessageDialog(
+                U.t('wps.dialog.unlinkTitle'),
+                U.t('wps.alert.unlinkNoToken'),
+                'warning'
+            );
             return;
         }
         if (!isBridgeReachable()) {
-            U.alertUser(U.t('wps.alert.unlinkNeedsZotero'));
+            showMessageDialog(
+                U.t('wps.dialog.unlinkTitle'),
+                U.t('wps.alert.unlinkNeedsZotero'),
+                'error'
+            );
             return;
         }
         if (confirm(U.t('wps.confirm.removeCodes'))) {
