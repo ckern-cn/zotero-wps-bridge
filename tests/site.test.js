@@ -205,8 +205,11 @@ test('navigation keeps a consistent link style and marks the active section', ()
         assert.match(html,
             /<nav class="site-nav"[^>]*>\s*<a href="#top">(?:首页|Home)<\/a>\s*<a href="#features">/);
         assert.match(html, /<a href="#download">/);
-        assert.match(html, /class="repo-pill"[\s\S]*?class="gitee-icon"/);
-        assert.match(html, /class="gitee-icon"[\s\S]*?viewBox="0 0 100 100"/);
+        const repo = html.match(/<a class="repo-pill"[\s\S]*?<\/a>/);
+        assert.ok(repo, page.file + ' should contain a Gitee repository link');
+        assert.match(repo[0], /class="gitee-icon"[\s\S]*?viewBox="0 0 100 100"/);
+        assert.match(repo[0], /aria-label="Gitee (?:主仓库|repository)"/);
+        assert.doesNotMatch(repo[0], />\s*Gitee\s*</);
     }
     const styles = read('styles.css');
     assert.doesNotMatch(styles, /\.nav-cta/);
