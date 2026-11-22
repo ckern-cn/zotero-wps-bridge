@@ -11,7 +11,7 @@
 - 需要先在阿里云轻量服务器控制台确认：
   - SSH 端口和防火墙/安全组
   - Nginx 是否已配置 `zw.ckern.cn` 的 server block
-  - Web 根目录，例如 `/var/www/zw.ckern.cn`
+  - Web 根目录，例如 `/webapps/zw.ckern.cn`
 
 在拿到 SSH 访问前，无法安全地直接上传。
 
@@ -21,7 +21,7 @@
 DEPLOY_HOST=47.243.7.75 \
 DEPLOY_USER=root \
 DEPLOY_PORT=22 \
-DEPLOY_PATH=/var/www/zw.ckern.cn \
+DEPLOY_PATH=/webapps/zw.ckern.cn \
 npm run deploy:site
 ```
 
@@ -45,8 +45,9 @@ npm run deploy:site
 示例配置：`deploy/nginx-zw.ckern.cn.conf`
 
 ```bash
-sudo cp deploy/nginx-zw.ckern.cn.conf /etc/nginx/conf.d/zw.ckern.cn.conf
-sudo mkdir -p /var/www/zw.ckern.cn
+sudo cp deploy/nginx-zw.ckern.cn.conf /etc/nginx/apps/zw.ckern.cn.conf
+sudo ln -sf ../apps/zw.ckern.cn.conf /etc/nginx/apps.enabled/zw.ckern.cn.conf
+sudo mkdir -p /webapps/zw.ckern.cn
 sudo nginx -t
 sudo systemctl reload nginx
 ```

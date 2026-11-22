@@ -9,7 +9,7 @@ set -euo pipefail
 # Optional:
 #   DEPLOY_USER=root
 #   DEPLOY_PORT=22
-#   DEPLOY_PATH=/var/www/zw.ckern.cn
+#   DEPLOY_PATH=/webapps/zw.ckern.cn
 #   DEPLOY_RELOAD="sudo nginx -t && sudo systemctl reload nginx"
 #
 # The release build must use the real update URL. This script rebuilds and
@@ -18,7 +18,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DEPLOY_USER="${DEPLOY_USER:-root}"
 DEPLOY_PORT="${DEPLOY_PORT:-22}"
-DEPLOY_PATH="${DEPLOY_PATH:-/var/www/zw.ckern.cn}"
+DEPLOY_PATH="${DEPLOY_PATH:-/webapps/zw.ckern.cn}"
 DEPLOY_RELOAD="${DEPLOY_RELOAD:-nginx -t && systemctl reload nginx}"
 : "${DEPLOY_HOST:?Set DEPLOY_HOST, for example DEPLOY_HOST=47.243.7.75}"
 
