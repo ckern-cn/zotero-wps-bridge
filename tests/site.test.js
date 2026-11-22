@@ -89,11 +89,18 @@ test('all local page assets exist on both landing pages', () => {
     assert.deepEqual(missing, []);
 });
 
-test('pages do not load remote scripts, styles, or image sources', () => {
+test('pages only load first-party assets and the self-hosted analytics script', () => {
+    const analytics = 'https://ats.ckern.cn/rv.js/298511030001733';
     for (const page of PAGES) {
         const html = read(page.file);
         assert.doesNotMatch(html,
             /<(?:script|link|img|source)[^>]+(?:src|href)="http:\/\//i);
+        const remote = Array.from(
+            html.matchAll(/<(?:script|link|img|source)[^>]+(?:src|href)="(https?:\/\/[^"]+)"/gi),
+            (match) => match[1])
+            .filter((url) => !url.startsWith(DOMAIN));
+        assert.deepEqual(remote, [analytics],
+            page.file + ' should only load the self-hosted analytics script');
     }
     assert.doesNotMatch(read('styles.css'), /url\(\s*['"]?http:\/\//i);
 });
@@ -115,6 +122,16 @@ test('site configuration points at the official domain and downloadable files', 
     assert.match(config, /xpi:\s*'\/downloads\/zotero-wps-bridge-latest\.xpi'/);
     assert.match(config, /zip:\s*'\/downloads\/zotero-wps-bridge-addon-latest\.zip'/);
     assert.match(config, /updates:\s*'\/updates\.json'/);
+
+    const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
+    const escaped = pkg.version.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    for (const page of PAGES) {
+        const html = read(page.file);
+        for (const asset of ['styles.css', 'config.js', 'app.js']) {
+            assert.match(html, new RegExp(asset.replace('.', '\\.') + '\\?v=' + escaped),
+                page.file + ' should cache-bust ' + asset);
+        }
+    }
 });
 
 test('generated version and update manifests match the current release', () => {
@@ -148,4 +165,34 @@ test('robots, sitemap, headers, and generated download notes are present', () =>
     assert.match(read('sitemap.xml'), /<loc>https:\/\/zw\.ckern\.cn\/en\/<\/loc>/);
     assert.match(read('_headers'), /X-Content-Type-Options: nosniff/);
     assert.match(read('downloads/README.md'), /build-site\.js/);
+});
+
+test('navigation returns to top without a sticky-header anchor', () => {
+    const styles = read('styles.css');
+    assert.doesNotMatch(styles,
+        /\.ribbon-group\.secondary\s*\{[^}]*display:\s*none/);
+    for (const page of PAGES) {
+        const html = read(page.file);
+        assert.match(html, /<span id="top" class="top-anchor"/);
+        assert.doesNotMatch(html, /<header[^>]+id="top"/);
+        assert.match(html, /data-back-to-top/);
+        assert.match(html, /a[^>]+href="#top"/);
+    }
+    const js = read('app.js');
+    assert.match(js, /a\[href="#top"\]/);
+    assert.match(js, /scrollToTop/);
+});
+
+test('the analytics tag sits before </body> and referrers are allowed', () => {
+    const tag = '<script async src="https://ats.ckern.cn/rv.js/298511030001733"></script>';
+    for (const page of PAGES) {
+        const html = read(page.file);
+        assert.ok(html.includes(tag), page.file + ' is missing the analytics tag');
+        assert.match(html, new RegExp(tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*</body>'));
+    }
+    assert.match(read('_headers'), /Referrer-Policy: strict-origin-when-cross-origin/);
+    assert.doesNotMatch(read('_headers'), /Referrer-Policy:\s*no-referrer/i);
+    const nginx = fs.readFileSync(
+        path.join(ROOT, 'deploy', 'nginx-zw.ckern.cn.conf'), 'utf8');
+    assert.doesNotMatch(nginx, /Referrer-Policy\s+no-referrer/i);
 });

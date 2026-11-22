@@ -17,6 +17,8 @@
 
 当前 `80/tcp` 在服务器 firewalld 中已放行，但从外网访问仍超时，需要在阿里云轻量服务器控制台的安全组中放行 80，才能完成 HTTP → HTTPS 跳转和部分 ACME 校验。
 
+站点通过 `https://ats.ckern.cn/rv.js/298511030001733` 统计访问量。该统计依赖浏览器发送 `Referer`，因此 `Referrer-Policy` 不能设为 `no-referrer`；当前 Nginx 使用 `strict-origin-when-cross-origin`，会向统计域名发送站点来源。
+
 ## 一键部署（拿到 SSH 后）
 
 ```bash

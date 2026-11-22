@@ -70,16 +70,19 @@
             /* The site remains usable with the static fallback links. */
         });
 
-    /* Header state */
+    /* Header state and back-to-top visibility */
     const header = $('.site-header');
-    function updateHeader() {
-        if (!header) {
-            return;
+    const backToTop = $('[data-back-to-top]');
+    function updateScrollUI() {
+        if (header) {
+            header.classList.toggle('scrolled', window.scrollY > 8);
         }
-        header.classList.toggle('scrolled', window.scrollY > 8);
+        if (backToTop) {
+            backToTop.classList.toggle('is-visible', window.scrollY > 560);
+        }
     }
-    window.addEventListener('scroll', updateHeader, { passive: true });
-    updateHeader();
+    window.addEventListener('scroll', updateScrollUI, { passive: true });
+    updateScrollUI();
 
     /* Mobile navigation */
     const navToggle = $('.nav-toggle');
@@ -89,6 +92,28 @@
         if (navToggle) {
             navToggle.setAttribute('aria-expanded', 'false');
         }
+    }
+
+    /* Back to top: the sticky header itself cannot be used as an anchor
+     * target, so both the logo and the floating button scroll the window. */
+    const reduceMotion = window.matchMedia
+        ? window.matchMedia('(prefers-reduced-motion: reduce)')
+        : { matches: false };
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: reduceMotion.matches ? 'auto' : 'smooth'
+        });
+    }
+    for (const link of $$('a[href="#top"]')) {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            closeNav();
+            scrollToTop();
+        });
+    }
+    if (backToTop) {
+        backToTop.addEventListener('click', scrollToTop);
     }
     if (navToggle && nav) {
         navToggle.addEventListener('click', function () {

@@ -59,6 +59,14 @@ body.nav-open {
     overflow: hidden;
 }
 
+.top-anchor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+}
+
 img {
     display: block;
     max-width: 100%;
@@ -693,8 +701,10 @@ code {
 
 .ribbon-group {
     display: flex;
+    flex: 0 1 auto;
     flex-direction: column;
     align-items: center;
+    min-width: 0;
     padding: 0 10px;
     border-right: 1px solid #e6ecf2;
 }
@@ -705,26 +715,36 @@ code {
 
 .ribbon-buttons {
     display: flex;
+    min-width: 0;
     gap: 4px;
 }
 
 .ribbon-button {
     display: flex;
+    flex: 0 1 auto;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     gap: 4px;
-    width: 60px;
+    width: 58px;
+    min-width: 0;
     padding: 4px 2px;
     border-radius: 6px;
     color: #455565;
-    font-size: 8.5px;
+    font-size: 8px;
     line-height: 1.25;
     text-align: center;
 }
 
 .ribbon-button.large {
-    width: 70px;
+    width: 68px;
+}
+
+.ribbon-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 22px;
 }
 
 .ribbon-button img {
@@ -800,8 +820,8 @@ code {
 
 .float-card {
     position: absolute;
-    left: -26px;
-    bottom: 32px;
+    right: 20px;
+    bottom: -26px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -1480,6 +1500,58 @@ code {
 }
 
 /* --------------------------------------------------------------------------
+ * Back to top
+ * ----------------------------------------------------------------------- */
+
+.back-to-top {
+    position: fixed;
+    right: max(20px, env(safe-area-inset-right, 0px));
+    bottom: max(20px, env(safe-area-inset-bottom, 0px));
+    z-index: 60;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    border-radius: 50%;
+    background: var(--coral);
+    color: #fff;
+    box-shadow: 0 12px 30px rgba(3, 13, 23, 0.26);
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.2s ease, transform 0.2s ease,
+        visibility 0.2s ease, background 0.2s ease;
+}
+
+.back-to-top.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.back-to-top:hover {
+    background: var(--coral-dark);
+}
+
+.back-to-top:focus-visible {
+    outline: 3px solid rgba(232, 79, 69, 0.36);
+    outline-offset: 3px;
+}
+
+.back-to-top svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* --------------------------------------------------------------------------
  * Footer
  * ----------------------------------------------------------------------- */
 
@@ -1610,29 +1682,41 @@ code {
         gap: 14px;
     }
 
-    .ribbon-group.secondary {
-        display: none;
-    }
-
-    .ribbon-group {
-        padding: 0 8px;
-    }
-
     .ribbon-button {
-        width: 56px;
-        font-size: 8px;
+        width: 66px;
     }
 
     .ribbon-button.large {
-        width: 64px;
+        width: 76px;
     }
 
     .float-card {
-        left: -12px;
+        right: 12px;
+        bottom: -22px;
     }
 
     .open-source-grid {
         gap: 40px;
+    }
+}
+
+/* Between tablet and desktop the hero stays side by side. Two ribbon rows
+ * keep every button visible instead of hiding the tools group. */
+@media (min-width: 901px) and (max-width: 1040px) {
+    .ribbon {
+        flex-wrap: wrap;
+        justify-content: center;
+        row-gap: 8px;
+    }
+
+    .ribbon-group {
+        flex: 1 1 100%;
+        padding: 4px 6px;
+        border-right: 0;
+    }
+
+    .ribbon-group + .ribbon-group {
+        border-top: 1px solid #e6ecf2;
     }
 }
 
@@ -1788,16 +1872,12 @@ code {
 
     .ribbon {
         max-width: 100%;
-        overflow-x: auto;
-    }
-
-    .ribbon-group.secondary {
-        display: none;
+        overflow: visible;
     }
 
     .ribbon-button,
     .ribbon-button.large {
-        width: 76px;
+        width: 66px;
     }
 
     .ribbon-button img,
@@ -1817,8 +1897,8 @@ code {
     }
 
     .float-card {
-        left: 10px;
-        bottom: 14px;
+        right: 10px;
+        bottom: -20px;
         padding: 9px 12px;
     }
 
@@ -1902,6 +1982,32 @@ code {
 
     .donate-note {
         text-align: left;
+    }
+}
+
+@media (max-width: 660px) {
+    .ribbon {
+        flex-wrap: wrap;
+        justify-content: center;
+        row-gap: 8px;
+    }
+
+    .ribbon-group {
+        flex: 1 1 100%;
+        padding: 4px 6px;
+        border-right: 0;
+    }
+
+    .ribbon-group + .ribbon-group {
+        border-top: 1px solid #e6ecf2;
+    }
+
+    .ribbon-button {
+        width: 64px;
+    }
+
+    .ribbon-button.large {
+        width: 68px;
     }
 }
 

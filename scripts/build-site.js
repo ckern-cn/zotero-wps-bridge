@@ -52,6 +52,18 @@ if (!fs.existsSync(SITE)) {
 }
 fs.mkdirSync(DOWNLOADS, { recursive: true });
 
+/* Keep the cache-busting query on shared assets in sync with the release. */
+for (const relative of ['index.html', path.join('en', 'index.html')]) {
+    const file = path.join(SITE, relative);
+    const html = fs.readFileSync(file, 'utf8');
+    const updated = html.replace(
+        /(styles\.css|config\.js|app\.js)\?v=[0-9A-Za-z.-]+/g,
+        '$1?v=' + version);
+    if (updated !== html) {
+        fs.writeFileSync(file, updated);
+    }
+}
+
 const xpi = requireFile(path.join(DIST, xpiName),
     'Run a release build first:\n' +
     "UPDATE_URL='https://zw.ckern.cn/updates.json' " +

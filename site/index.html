@@ -27,9 +27,9 @@
 <link rel="icon" href="assets/icon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="assets/icon-128.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="styles.css">
-<script src="config.js"></script>
-<script src="app.js" defer></script>
+<link rel="stylesheet" href="styles.css?v=0.2.10">
+<script src="config.js?v=0.2.10"></script>
+<script src="app.js?v=0.2.10" defer></script>
 <script>
     document.documentElement.classList.add('js');
     // Safety net: never leave content hidden if the observer or app.js fails.
@@ -42,9 +42,10 @@
 </script>
 </head>
 <body>
+<span id="top" class="top-anchor" aria-hidden="true"></span>
 <a class="skip-link" href="#main">跳到主要内容</a>
 
-<header class="site-header" id="top">
+<header class="site-header">
   <div class="shell header-inner">
     <a class="brand" href="#top">
       <img src="assets/icon.svg" alt="" width="42" height="42">
@@ -122,19 +123,19 @@
               <div class="ribbon-buttons">
                 <span class="ribbon-button large">
                   <img src="assets/ribbon/citation.svg" alt="" width="30" height="30">
-                  <span>插入/编辑引文</span>
+                  <span class="ribbon-label">插入/编辑引文</span>
                 </span>
                 <span class="ribbon-button large">
                   <img src="assets/ribbon/bibliography.svg" alt="" width="30" height="30">
-                  <span>插入/编辑参考文献</span>
+                  <span class="ribbon-label">插入/编辑<br>参考文献</span>
                 </span>
                 <span class="ribbon-button large">
                   <img src="assets/ribbon/refresh.svg" alt="" width="30" height="30">
-                  <span>刷新</span>
+                  <span class="ribbon-label">刷新</span>
                 </span>
                 <span class="ribbon-button large">
                   <img src="assets/ribbon/settings.svg" alt="" width="30" height="30">
-                  <span>文档设置</span>
+                  <span class="ribbon-label">文档设置</span>
                 </span>
               </div>
               <span class="ribbon-title">引文</span>
@@ -143,15 +144,15 @@
               <div class="ribbon-buttons">
                 <span class="ribbon-button">
                   <img src="assets/ribbon/note.svg" alt="" width="24" height="24">
-                  <span>插入笔记</span>
+                  <span class="ribbon-label">插入笔记</span>
                 </span>
                 <span class="ribbon-button">
                   <img src="assets/ribbon/unlink.svg" alt="" width="24" height="24">
-                  <span>解除链接</span>
+                  <span class="ribbon-label">解除链接</span>
                 </span>
                 <span class="ribbon-button">
                   <img src="assets/ribbon/explorer.svg" alt="" width="24" height="24">
-                  <span>引文浏览器</span>
+                  <span class="ribbon-label">引文浏览器</span>
                 </span>
               </div>
               <span class="ribbon-title">工具</span>
@@ -375,7 +376,7 @@
         <div class="open-source-copy" data-reveal>
           <p class="eyebrow eyebrow-dark">开源与隐私</p>
           <h2>代码可审计，数据留在本地</h2>
-          <p>项目以 AGPL-3.0-or-later 发布，构建脚本、测试和 WPS 加载项源码都在仓库中。没有账号系统、没有遥测，也没有隐藏的云端上传。</p>
+          <p>项目以 AGPL-3.0-or-later 发布，构建脚本、测试和 WPS 加载项源码都在仓库中。插件本体没有账号系统、没有遥测，也没有隐藏的云端上传。</p>
           <div class="inline-links">
             <a class="text-link" data-link="repo" href="https://gitee.com/ckern/zotero-wps-bridge" target="_blank" rel="noopener">Gitee 主仓库 <span aria-hidden="true">→</span></a>
             <a class="text-link" data-link="github" href="https://github.com/ckern-cn/zotero-wps-bridge" target="_blank" rel="noopener">GitHub 镜像 <span aria-hidden="true">→</span></a>
@@ -396,8 +397,8 @@
           </div>
           <div class="security-card">
             <span class="security-kicker">NO TELEMETRY</span>
-            <strong>不收集使用数据</strong>
-            <p>没有账号、统计 SDK 或后台服务。</p>
+            <strong>插件不收集使用数据</strong>
+            <p>Zotero / WPS 插件没有账号、统计 SDK 或后台服务；官网仅使用自建访问统计。</p>
           </div>
           <div class="security-card">
             <span class="security-kicker">DCO</span>
@@ -518,5 +519,11 @@
     <p>Zotero 是 Corporation for Digital Scholarship 的商标；WPS 是 Kingsoft Office Software 的商标。本项目与二者无官方隶属关系。</p>
   </div>
 </footer>
+
+<button class="back-to-top" type="button" data-back-to-top aria-label="回到顶部" title="回到顶部">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m0 0-6 6m6-6 6 6"/></svg>
+</button>
+
+<script async src="https://ats.ckern.cn/rv.js/298511030001733"></script>
 </body>
 </html>

@@ -27,9 +27,9 @@
 <link rel="icon" href="../assets/icon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="../assets/icon-128.png">
 <link rel="manifest" href="../manifest.webmanifest">
-<link rel="stylesheet" href="../styles.css">
-<script src="../config.js"></script>
-<script src="../app.js" defer></script>
+<link rel="stylesheet" href="../styles.css?v=0.2.10">
+<script src="../config.js?v=0.2.10"></script>
+<script src="../app.js?v=0.2.10" defer></script>
 <script>
     document.documentElement.classList.add('js');
     window.setTimeout(function () {
@@ -41,9 +41,10 @@
 </script>
 </head>
 <body>
+<span id="top" class="top-anchor" aria-hidden="true"></span>
 <a class="skip-link" href="#main">Skip to content</a>
 
-<header class="site-header" id="top">
+<header class="site-header">
   <div class="shell header-inner">
     <a class="brand" href="#top">
       <img src="../assets/icon.svg" alt="" width="42" height="42">
@@ -121,19 +122,19 @@
               <div class="ribbon-buttons">
                 <span class="ribbon-button large">
                   <img src="../assets/ribbon/citation.svg" alt="" width="30" height="30">
-                  <span>Insert/Edit Citation</span>
+                  <span class="ribbon-label">Insert/Edit<br>Citation</span>
                 </span>
                 <span class="ribbon-button large">
                   <img src="../assets/ribbon/bibliography.svg" alt="" width="30" height="30">
-                  <span>Insert/Edit Bibliography</span>
+                  <span class="ribbon-label">Insert/Edit<br>Bibliography</span>
                 </span>
                 <span class="ribbon-button large">
                   <img src="../assets/ribbon/refresh.svg" alt="" width="30" height="30">
-                  <span>Refresh</span>
+                  <span class="ribbon-label">Refresh</span>
                 </span>
                 <span class="ribbon-button large">
                   <img src="../assets/ribbon/settings.svg" alt="" width="30" height="30">
-                  <span>Document Preferences</span>
+                  <span class="ribbon-label">Document<br>Preferences</span>
                 </span>
               </div>
               <span class="ribbon-title">Citations</span>
@@ -142,15 +143,15 @@
               <div class="ribbon-buttons">
                 <span class="ribbon-button">
                   <img src="../assets/ribbon/note.svg" alt="" width="24" height="24">
-                  <span>Insert Note</span>
+                  <span class="ribbon-label">Insert<br>Note</span>
                 </span>
                 <span class="ribbon-button">
                   <img src="../assets/ribbon/unlink.svg" alt="" width="24" height="24">
-                  <span>Unlink Citations</span>
+                  <span class="ribbon-label">Unlink<br>Citations</span>
                 </span>
                 <span class="ribbon-button">
                   <img src="../assets/ribbon/explorer.svg" alt="" width="24" height="24">
-                  <span>Citation Explorer</span>
+                  <span class="ribbon-label">Citation<br>Explorer</span>
                 </span>
               </div>
               <span class="ribbon-title">Tools</span>
@@ -374,7 +375,7 @@
         <div class="open-source-copy" data-reveal>
           <p class="eyebrow eyebrow-dark">Open source &amp; privacy</p>
           <h2>Auditable code. Local data.</h2>
-          <p>Released under AGPL-3.0-or-later, with build scripts, tests, and the WPS add-in source in the repository. No accounts, no telemetry, no hidden cloud uploads.</p>
+          <p>Released under AGPL-3.0-or-later, with build scripts, tests, and the WPS add-in source in the repository. The plugin itself has no accounts, telemetry, or hidden cloud uploads.</p>
           <div class="inline-links">
             <a class="text-link" data-link="repo" href="https://gitee.com/ckern/zotero-wps-bridge" target="_blank" rel="noopener">Gitee repository <span aria-hidden="true">→</span></a>
             <a class="text-link" data-link="github" href="https://github.com/ckern-cn/zotero-wps-bridge" target="_blank" rel="noopener">GitHub mirror <span aria-hidden="true">→</span></a>
@@ -395,8 +396,8 @@
           </div>
           <div class="security-card">
             <span class="security-kicker">NO TELEMETRY</span>
-            <strong>No usage tracking</strong>
-            <p>No accounts, analytics SDKs, or backend service.</p>
+            <strong>The plugin collects no usage data</strong>
+            <p>The Zotero / WPS plugin has no accounts, analytics SDKs, or backend service. This website uses self-hosted access statistics.</p>
           </div>
           <div class="security-card">
             <span class="security-kicker">DCO</span>
@@ -517,5 +518,11 @@
     <p>Zotero is a trademark of the Corporation for Digital Scholarship; WPS is a trademark of Kingsoft Office Software. This project is not affiliated with either.</p>
   </div>
 </footer>
+
+<button class="back-to-top" type="button" data-back-to-top aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m0 0-6 6m6-6 6 6"/></svg>
+</button>
+
+<script async src="https://ats.ckern.cn/rv.js/298511030001733"></script>
 </body>
 </html>
