@@ -16,7 +16,7 @@
 
 ```text
 update_url  -> https://example.com/zotero-wps-bridge/updates.json
-update_link -> https://example.com/zotero-wps-bridge/zotero-wps-bridge-0.2.6.xpi
+update_link -> https://example.com/zotero-wps-bridge/zotero-wps-bridge-0.2.7.xpi
 XPI 下载页  -> 用户首次安装时使用（可选）
 ```
 
@@ -49,8 +49,8 @@ Zotero 7+ 使用 JSON 更新清单（替代旧版 `update.rdf`）：
     "zotero-wps@wps-zotero": {
       "updates": [
         {
-          "version": "0.2.6",
-          "update_link": "https://example.com/zotero-wps-bridge/zotero-wps-bridge-0.2.6.xpi",
+          "version": "0.2.7",
+          "update_link": "https://example.com/zotero-wps-bridge/zotero-wps-bridge-0.2.7.xpi",
           "update_hash": "sha256:<xpi-sha256>",
           "applications": {
             "zotero": {
@@ -88,7 +88,7 @@ npm run build
 
 ```bash
 UPDATE_URL='https://example.com/zotero-wps-bridge/updates.json' \
-UPDATE_LINK='https://example.com/zotero-wps-bridge/releases/zotero-wps-bridge-0.2.6.xpi' \
+UPDATE_LINK='https://example.com/zotero-wps-bridge/releases/zotero-wps-bridge-0.2.7.xpi' \
 npm run build
 ```
 
@@ -112,7 +112,7 @@ npm run build
 
 ```text
 updates.json
-zotero-wps-bridge-0.2.6.xpi
+zotero-wps-bridge-0.2.7.xpi
 ```
 
 构建：
@@ -123,16 +123,16 @@ UPDATE_LINK_BASE='https://<user>.github.io/zotero-wps-bridge/' \
 npm run build
 ```
 
-然后把 `dist/updates.json` 和 `dist/zotero-wps-bridge-0.2.6.xpi` 发布到 Pages。
+然后把 `dist/updates.json` 和 `dist/zotero-wps-bridge-0.2.7.xpi` 发布到 Pages。
 
 ### GitHub Releases 示例
 
-1. 创建 release `v0.2.6`，上传 `zotero-wps-bridge-0.2.6.xpi` 和 `updates.json`。
+1. 创建 release `v0.2.7`，上传 `zotero-wps-bridge-0.2.7.xpi` 和 `updates.json`。
 2. 构建时使用：
 
 ```bash
 UPDATE_URL='https://github.com/<user>/zotero-wps-bridge/releases/latest/download/updates.json' \
-UPDATE_LINK_BASE='https://github.com/<user>/zotero-wps-bridge/releases/download/v0.2.6/' \
+UPDATE_LINK_BASE='https://github.com/<user>/zotero-wps-bridge/releases/download/v0.2.7/' \
 npm run build
 ```
 

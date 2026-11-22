@@ -1,6 +1,6 @@
 # Linux 版完整安装说明
 
-适用版本：**Zotero WPS Bridge 0.2.6**
+适用版本：**Zotero WPS Bridge 0.2.7**
 
 适用平台：Linux x86_64（deb/rpm 官方包优先；Flatpak/Snap/AppImage 见特殊说明）
 
@@ -92,12 +92,12 @@ curl http://127.0.0.1:23119/connector/ping
 
 ### 3.1 安装 Zotero 插件
 
-1. 下载 `zotero-wps-bridge-0.2.6.xpi`。
+1. 下载 `zotero-wps-bridge-0.2.7.xpi`。
 2. 打开 Zotero。
 3. 菜单 **编辑 → 设置**（Zotero 英文界面为 **Edit → Settings**）。
 4. 进入 **插件 / Plugins**。
 5. 点击右上角齿轮 → **Install Plugin From File…**。
-6. 选择 `zotero-wps-bridge-0.2.6.xpi`。
+6. 选择 `zotero-wps-bridge-0.2.7.xpi`。
 7. 安装完成后重启 Zotero。
 
 安装成功后，设置中会出现 **WPS** 面板。
@@ -138,15 +138,15 @@ WPS 功能区应出现 **Zotero** 选项卡，包含：
 也可以直接检查文件：
 
 ```bash
-ls -la ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.6/
+ls -la ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.7/
 cat ~/.local/share/Kingsoft/wps/jsaddons/publish.xml
 ```
 
 `publish.xml` 中应包含：
 
 ```xml
-<jsplugin name="zotero-wps" type="wps" url="zotero-wps_0.2.6"
-          version="0.2.6" enable="enable_dev" install="null" customDomain=""/>
+<jsplugin name="zotero-wps" type="wps" url="zotero-wps_0.2.7"
+          version="0.2.7" enable="enable_dev" install="null" customDomain=""/>
 ```
 
 ---
@@ -276,19 +276,19 @@ Zotero 引文窗口可能被 WPS 抢焦点。可在 Zotero 设置 → WPS 中勾
 
 ```bash
 ls -ld ~/.local/share/Kingsoft/wps/jsaddons
-ls -l ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.6/js/config.js
+ls -l ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.7/js/config.js
 ```
 
 正常情况下 `config.js` 权限为 `600`：
 
 ```bash
-stat -c '%a %U %n' ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.6/js/config.js
+stat -c '%a %U %n' ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.7/js/config.js
 ```
 
 如果权限不对：
 
 ```bash
-chmod 600 ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.6/js/config.js
+chmod 600 ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.7/js/config.js
 ```
 
 ### 7.5 语言
@@ -309,10 +309,10 @@ chmod 600 ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.6/js/config.js
 
 按顺序检查：
 
-1. Zotero 设置 → WPS 是否显示“已安装 0.2.6”。
+1. Zotero 设置 → WPS 是否显示“已安装 0.2.7”。
 2. WPS 是否**完全退出**后重新启动。
 3. `publish.xml` 是否包含 `zotero-wps` 条目。
-4. 加载项目录是否存在 `zotero-wps_0.2.6/`。
+4. 加载项目录是否存在 `zotero-wps_0.2.7/`。
 5. WPS 是否禁用了 JS 加载项（WPS 设置/安全中心）。
 6. 是否有多个 WPS 安装（deb + Flatpak + Snap），Zotero 装到了另一个目录。
 
@@ -381,9 +381,9 @@ sudo chown -R "$USER":"$USER" ~/.local/share/Kingsoft/wps/jsaddons
 ### 9.1 解压
 
 ```bash
-mkdir -p ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.6
-unzip zotero-wps-bridge-addon-0.2.6.zip \
-  -d ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.6
+mkdir -p ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.7
+unzip zotero-wps-bridge-addon-0.2.7.zip \
+  -d ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.7
 ```
 
 ### 9.2 写入配置
@@ -397,7 +397,7 @@ extensions.zotero.zotero-wps.token
 创建/修改：
 
 ```text
-~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.6/js/config.js
+~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.7/js/config.js
 ```
 
 内容示例：
@@ -407,14 +407,14 @@ window.ZOTERO_WPS_CONFIG = {
     port: 23119,
     token: "把这里替换成你的令牌",
     locale: "zh-CN",
-    addonVersion: "0.2.6"
+    addonVersion: "0.2.7"
 };
 ```
 
 设置权限：
 
 ```bash
-chmod 600 ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.6/js/config.js
+chmod 600 ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.7/js/config.js
 ```
 
 > 手动安装包中的 `ribbon.xml` 默认是英文。需要本地化功能区时，优先使用 Zotero 自动安装。
@@ -430,15 +430,15 @@ chmod 600 ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.6/js/config.js
 在 `</jsplugins>` 前加入：
 
 ```xml
-<jsplugin name="zotero-wps" type="wps" url="zotero-wps_0.2.6"
-          version="0.2.6" enable="enable_dev" install="null" customDomain=""/>
+<jsplugin name="zotero-wps" type="wps" url="zotero-wps_0.2.7"
+          version="0.2.7" enable="enable_dev" install="null" customDomain=""/>
 ```
 
 如果存在 `jsplugins.xml`，可同样加入兼容条目：
 
 ```xml
 <jsplugin name="zotero-wps" type="wps"
-          url="zotero-wps_0.2.6" version="0.2.6"/>
+          url="zotero-wps_0.2.7" version="0.2.7"/>
 ```
 
 如果存在 `authwebsite.xml`，可加入：
@@ -452,7 +452,7 @@ chmod 600 ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.6/js/config.js
 ### 9.4 手动卸载
 
 ```bash
-rm -rf ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.6
+rm -rf ~/.local/share/Kingsoft/wps/jsaddons/zotero-wps_0.2.7
 ```
 
 并从 `publish.xml`、`jsplugins.xml`、`authwebsite.xml` 删除对应条目。
@@ -472,8 +472,8 @@ npm run build
 生成：
 
 ```text
-dist/zotero-wps-bridge-0.2.6.xpi
-dist/zotero-wps-bridge-addon-0.2.6.zip
+dist/zotero-wps-bridge-0.2.7.xpi
+dist/zotero-wps-bridge-addon-0.2.7.zip
 dist/SHA256SUMS.txt
 ```
 
@@ -486,7 +486,7 @@ dist/SHA256SUMS.txt
 - [ ] WPS 文字和 Zotero 都能以普通用户正常启动
 - [ ] `~/.local/share/Kingsoft/wps/jsaddons` 存在
 - [ ] Zotero 插件已安装并启用
-- [ ] Zotero 设置 → WPS 显示“已安装 0.2.6”
+- [ ] Zotero 设置 → WPS 显示“已安装 0.2.7”
 - [ ] WPS 功能区出现 Zotero 选项卡
 - [ ] WPS 中“检查连接”成功
 - [ ] 能插入一条引文

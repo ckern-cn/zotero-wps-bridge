@@ -14,7 +14,7 @@ var ZoteroWPSGlobal = this;
 
 var ZoteroWPS = {
     id: null,
-    version: '0.2.6',
+    version: '0.2.7',
     rootURI: null,
     token: null,
     addonFiles: null,
@@ -166,12 +166,30 @@ var ZoteroWPS = {
             candidates.push(Zotero.Prefs.get('intl.accept_languages'));
         }
         catch (e) {}
-        for (let candidate of candidates) {
-            if (this.i18n && this.i18n.normalizeLocale(candidate)) {
-                return this.i18n.normalizeLocale(candidate);
+        try {
+            if (navigator.languages) {
+                candidates.push.apply(candidates, navigator.languages);
+            }
+            else if (navigator.language) {
+                candidates.push(navigator.language);
             }
         }
-        return 'en-US';
+        catch (e) {}
+
+        let fallback = null;
+        for (let candidate of candidates) {
+            const normalized = this.i18n && this.i18n.normalizeLocale(candidate);
+            if (!normalized) {
+                continue;
+            }
+            if (normalized === 'zh-CN' || normalized === 'zh-TW') {
+                return normalized;
+            }
+            if (!fallback) {
+                fallback = normalized;
+            }
+        }
+        return fallback || 'en-US';
     },
 
     t: function (key, params) {
@@ -347,6 +365,8 @@ var ZoteroWPS = {
                     addonVersion: ZoteroWPS.addonVersion || ZoteroWPS.version,
                     zoteroVersion: Zotero.version,
                     port: port,
+                    uiLocale: ZoteroWPS.getLocale(),
+                    zoteroLocale: ZoteroWPS.getZoteroLocale(),
                     tokenRequired: true
                 }));
             }
@@ -673,7 +693,10 @@ var ZoteroWPS = {
                 id: 'zotero-prefpane-zotero-wps',
                 label: 'WPS',
                 image: this.rootURI + 'content/wps.svg',
-                scripts: [this.rootURI + 'content/preferences.js'],
+                scripts: [
+                    this.rootURI + 'content/i18n.js',
+                    this.rootURI + 'content/preferences.js'
+                ],
                 stylesheets: [this.rootURI + 'content/preferences.css']
             });
             this._prefPaneRetries = 0;

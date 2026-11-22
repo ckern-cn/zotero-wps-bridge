@@ -3,14 +3,85 @@
     'use strict';
 
     let lastStatus = null;
+    let paneTranslator = null;
 
     function plugin() {
         return Zotero.ZoteroWPS;
     }
 
+    function detectPaneLocale() {
+        if (!window.ZoteroWPSI18n) {
+            return 'en-US';
+        }
+        const candidates = [];
+        try {
+            if (navigator.languages) {
+                candidates.push.apply(candidates, navigator.languages);
+            }
+            else if (navigator.language) {
+                candidates.push(navigator.language);
+            }
+        }
+        catch (e) {}
+        try {
+            if (Services.locale && Services.locale.appLocaleAsBCP47) {
+                candidates.push(Services.locale.appLocaleAsBCP47);
+            }
+        }
+        catch (e) {}
+        try {
+            if (Zotero.locale) {
+                candidates.push(Zotero.locale);
+            }
+        }
+        catch (e) {}
+        try {
+            candidates.push(Zotero.Prefs.get('intl.accept_languages'));
+        }
+        catch (e) {}
+
+        let fallback = null;
+        for (let candidate of candidates) {
+            const normalized = window.ZoteroWPSI18n.normalizeLocale(candidate);
+            if (!normalized) {
+                continue;
+            }
+            if (normalized === 'zh-CN' || normalized === 'zh-TW') {
+                return normalized;
+            }
+            if (!fallback) {
+                fallback = normalized;
+            }
+        }
+        return fallback || 'en-US';
+    }
+
+    function paneT(key, params) {
+        if (!paneTranslator && window.ZoteroWPSI18n) {
+            paneTranslator = window.ZoteroWPSI18n.createTranslator(
+                detectPaneLocale(), 'en-US');
+        }
+        return paneTranslator ? paneTranslator.t(key, params) : key;
+    }
+
     function T(key, params) {
         const p = plugin();
-        return p ? p.t(key, params) : key;
+        if (p) {
+            const value = p.t(key, params);
+            if (value && value !== key) {
+                const detected = detectPaneLocale();
+                if ((detected === 'zh-CN' || detected === 'zh-TW')
+                        && typeof p.getLocale === 'function'
+                        && !/^zh/i.test(p.getLocale())) {
+                    const localValue = paneT(key, params);
+                    if (localValue && localValue !== key) {
+                        return localValue;
+                    }
+                }
+                return value;
+            }
+        }
+        return paneT(key, params);
     }
 
     function el(id) {

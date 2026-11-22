@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.7
+
+- 修复 Zotero 设置 WPS 面板仍显示英文的问题：设置页单独加载共享 i18n，并在插件翻译器未就绪/语言判断错误时使用中文回退。
+- 语言检测优先选择可用的 `zh-CN` / `zh-TW` 候选，避免 `Zotero.locale=en-US` 覆盖实际中文界面。
+- `/wps/ping` 返回 `uiLocale` 和 `zoteroLocale`，便于诊断语言问题。
+
 ## 0.2.6
 
 - 修复 WPS 功能区“切换布局”按钮仍显示英文的问题：补齐按钮 ID 的 Ribbon 本地化映射。
