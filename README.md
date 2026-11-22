@@ -4,6 +4,10 @@
 
 > 官方网站：<https://zw.ckern.cn/>
 >
+> GitHub：<https://github.com/ckern-cn/zotero-wps-bridge>
+>
+> Gitee 镜像：<https://gitee.com/ckern/zotero-wps-bridge>
+>
 > 源码、安装包和更新清单均以官方站点与仓库发布页为准。
 
 这是一个“原生”集成方案，不需要安装 Python、Node 或其他本地代理进程：

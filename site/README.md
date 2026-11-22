@@ -19,7 +19,7 @@
    - `CNAME`
    - `scripts/build-site.js` 中的默认 `SITE_URL`
 
-当前 `config.js` 使用 `https://github.com/ckernstudio/zotero-wps-bridge` 作为占位仓库地址，公开前请替换为真实地址。
+仓库地址已配置为 `https://github.com/ckern-cn/zotero-wps-bridge`，Gitee 镜像为 `https://gitee.com/ckern/zotero-wps-bridge`。
 
 ## 构建与预览
 

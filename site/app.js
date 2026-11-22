@@ -19,7 +19,7 @@
 
     /* Static links that are centralised in config.js. */
     const linkKeys = [
-        'repo', 'releases', 'issues', 'changelog', 'license',
+        'repo', 'gitee', 'releases', 'issues', 'changelog', 'license',
         'security', 'donate', 'updates'
     ];
     for (const key of linkKeys) {
