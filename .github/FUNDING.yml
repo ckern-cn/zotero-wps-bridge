@@ -1,6 +1,3 @@
 # 捐赠完全自愿，不换取功能、优先支持或路线图控制权。
-# 启用前取消注释，并只填写由项目所有者控制的官方渠道。
-# 文档：DONATE.md
-#
-# github: [your-github-username]
-# custom: ["https://example.com/donate"]
+# 只填写由项目所有者控制的官方渠道。文档：DONATE.md
+custom: ["https://zw.ckern.cn/#donate"]
