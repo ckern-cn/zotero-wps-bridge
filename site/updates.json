@@ -3,9 +3,9 @@
     "zotero-wps@wps-zotero": {
       "updates": [
         {
-          "version": "0.2.10",
-          "update_link": "https://zw.ckern.cn/downloads/zotero-wps-bridge-0.2.10.xpi",
-          "update_hash": "sha256:934cfe96bb43892a34ce197ce37340d74cefae29c3c05fbcd7451f39b1adadde",
+          "version": "0.2.11",
+          "update_link": "https://zw.ckern.cn/downloads/zotero-wps-bridge-0.2.11.xpi",
+          "update_hash": "sha256:bea5e43f38bea7bd49f3cb0be38eb9c961faefa5971c6821fd5aac50c6e28227",
           "applications": {
             "zotero": {
               "strict_min_version": "7.0",

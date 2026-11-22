@@ -87,6 +87,59 @@
         background: #1557b0;
     }
 
+    .zwps-contact {
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+        text-align: center;
+    }
+
+    .zwps-contact h2 {
+        margin: 0 0 6px;
+        font-size: 16px;
+        line-height: 1.4;
+        text-align: center;
+    }
+
+    .zwps-contact p {
+        margin: 0;
+        color: #5b6b7a;
+        font-size: 13px;
+        line-height: 1.6;
+        text-align: center;
+    }
+
+    .zwps-contact-links {
+        margin-top: 10px !important;
+        color: #1f2937 !important;
+    }
+
+    .zwps-contact-value {
+        font-family: monospace;
+        font-weight: 700;
+        user-select: all;
+    }
+
+    .zwps-contact-sep {
+        margin: 0 8px;
+        color: #9aa6b2;
+    }
+
+    .zwps-contact-links a {
+        color: #0b7a6f;
+        text-decoration: none;
+    }
+
+    .zwps-contact-links a:hover {
+        text-decoration: underline;
+    }
+
+    .zwps-contact-note {
+        margin-top: 10px !important;
+        color: #8a97a4 !important;
+        font-size: 11px !important;
+    }
+
     .zwps-donate {
         margin-top: 24px;
         padding-top: 20px;
@@ -158,6 +211,23 @@
             background: #2563eb;
         }
 
+        .zwps-contact {
+            border-top-color: #4a4a51;
+        }
+
+        .zwps-contact p,
+        .zwps-contact-links {
+            color: #b9b9c0 !important;
+        }
+
+        .zwps-contact-links a {
+            color: #5ad1c1;
+        }
+
+        .zwps-contact-note {
+            color: #a0a0a8 !important;
+        }
+
         .zwps-donate {
             border-top-color: #4a4a51;
         }
@@ -181,6 +251,18 @@
     <main class="zwps-dialog" id="dialog">
         <h1 id="title">Zotero WPS Bridge</h1>
         <pre id="body"></pre>
+        <section class="zwps-contact" id="contact" hidden>
+            <h2 id="contact-title"></h2>
+            <p id="contact-copy"></p>
+            <p class="zwps-contact-links">
+                <span id="contact-qq-label"></span>
+                <span class="zwps-contact-value" id="contact-qq"></span>
+                <span class="zwps-contact-sep" aria-hidden="true">·</span>
+                <span id="contact-email-label"></span>
+                <a id="contact-email" href="mailto:ckern@qq.com">ckern@qq.com</a>
+            </p>
+            <p class="zwps-contact-note" id="contact-note"></p>
+        </section>
         <section class="zwps-donate" id="donate" hidden>
             <h2 id="donate-title"></h2>
             <p id="donate-copy"></p>
@@ -256,6 +338,20 @@
     document.getElementById('close').textContent = data.closeLabel || 'Close';
     document.title = data.title || 'Zotero WPS Bridge';
 
+    if (data.contact) {
+        var contact = data.contact;
+        document.getElementById('contact-title').textContent = contact.title || '';
+        document.getElementById('contact-copy').textContent = contact.copy || '';
+        document.getElementById('contact-qq-label').textContent = contact.qqLabel || '';
+        document.getElementById('contact-qq').textContent = contact.qq || '';
+        document.getElementById('contact-email-label').textContent = contact.emailLabel || '';
+        var contactEmail = document.getElementById('contact-email');
+        contactEmail.textContent = contact.email || '';
+        contactEmail.href = 'mailto:' + (contact.email || '')
+            + (contact.emailSubject ? '?subject=' + encodeURIComponent(contact.emailSubject) : '');
+        document.getElementById('contact-note').textContent = contact.note || '';
+        document.getElementById('contact').hidden = false;
+    }
     if (data.donate) {
         var donate = data.donate;
         document.getElementById('donate-title').textContent = donate.title || '';

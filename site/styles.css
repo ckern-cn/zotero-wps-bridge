@@ -1291,6 +1291,115 @@ code {
 }
 
 /* --------------------------------------------------------------------------
+ * Community
+ * ----------------------------------------------------------------------- */
+
+.community-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.community-card {
+    padding: 28px 24px 24px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+}
+
+.community-kicker {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: var(--teal-link);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+.community-card h3 {
+    margin: 0 0 10px;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.community-value {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+.community-value a {
+    color: var(--teal-link);
+}
+
+.community-value a:hover {
+    color: var(--teal-link-dark);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.community-copy {
+    margin-top: 10px;
+    padding: 7px 14px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--surface-soft);
+    color: var(--ink);
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.community-copy:hover {
+    border-color: var(--teal);
+    color: var(--teal-link);
+}
+
+.community-copy.is-copied {
+    border-color: var(--teal);
+    background: var(--teal-soft);
+    color: var(--teal-link);
+}
+
+.community-copy.is-error {
+    border-color: rgba(232, 79, 69, 0.45);
+    background: var(--coral-soft);
+    color: #a63a32;
+}
+
+.community-meta {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.65;
+}
+
+.community-note {
+    margin: 18px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+    text-align: center;
+}
+
+.download-note a {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.download-note strong {
+    color: #fff;
+}
+
+/* --------------------------------------------------------------------------
  * Donation
  * ----------------------------------------------------------------------- */
 
@@ -1760,7 +1869,8 @@ code {
 
     .open-source-grid,
     .donate-grid,
-    .download-inner {
+    .download-inner,
+    .community-grid {
         grid-template-columns: 1fr;
         gap: 34px;
     }

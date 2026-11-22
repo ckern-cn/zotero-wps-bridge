@@ -2,6 +2,9 @@
 (function () {
     'use strict';
 
+    const COMMUNITY_QQ = '1091139987';
+    const COMMUNITY_EMAIL = 'ckern@qq.com';
+
     let lastStatus = null;
     let paneTranslator = null;
 
@@ -150,6 +153,18 @@
         setText('zwps-help-4', T('zotero.prefs.help4'));
         setText('zwps-note', T('zotero.prefs.note'));
         setText('zwps-studio', T('zotero.prefs.studio'));
+        setText('zwps-contact-title', T('contact.title'));
+        setText('zwps-contact-copy', T('contact.copy'));
+        setText('zwps-contact-qq-label', T('contact.qqLabel'));
+        setText('zwps-contact-qq', COMMUNITY_QQ);
+        setText('zwps-contact-email-label', T('contact.emailLabel'));
+        setText('zwps-contact-email', COMMUNITY_EMAIL);
+        setText('zwps-contact-note', T('contact.note'));
+        const contactEmail = el('zwps-contact-email');
+        if (contactEmail) {
+            contactEmail.href = 'mailto:' + COMMUNITY_EMAIL
+                + '?subject=' + encodeURIComponent(T('contact.emailSubject'));
+        }
         setText('zwps-donate-title', T('donate.title'));
         setText('zwps-donate-copy', T('donate.copy'));
         setText('zwps-donate-note', T('donate.note'));

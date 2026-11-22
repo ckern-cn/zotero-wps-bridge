@@ -52,7 +52,7 @@ test('both landing pages contain the key sections and download hooks', () => {
     for (const page of PAGES) {
         const html = read(page.file);
         for (const id of ['features', 'install', 'compatibility', 'faq',
-            'open-source', 'donate', 'download']) {
+            'open-source', 'community', 'donate', 'download']) {
             assert.match(html, new RegExp('id="' + id + '"'),
                 page.file + ' missing #' + id);
         }
@@ -218,4 +218,18 @@ test('navigation keeps a consistent link style and marks the active section', ()
     const js = read('app.js');
     assert.match(js, /updateActiveSection/);
     assert.match(js, /aria-current/);
+});
+
+test('both landing pages expose the QQ group and email support channels', () => {
+    for (const page of PAGES) {
+        const html = read(page.file);
+        assert.match(html, /id="community"/);
+        assert.match(html, /<a href="#community">(?:交流|Community)<\/a>/);
+        assert.match(html, /1091139987/);
+        assert.match(html, /ckern@qq\.com/);
+        assert.match(html, /data-copy="1091139987"/);
+        assert.match(html, /mailto:ckern@qq\.com/);
+        assert.match(html, /data-link="issues"/);
+    }
+    assert.match(read('app.js'), /navigator\.clipboard/);
 });

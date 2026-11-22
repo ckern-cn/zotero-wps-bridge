@@ -78,3 +78,11 @@ test('destructive preference actions use a confirmation', () => {
         assert.match(block, /confirmDialog\(/, id + ' should ask for confirmation');
     }
 });
+
+test('preference pane exposes the QQ group and support email', () => {
+    assert.match(xhtml, /class="zwps-contact-card"/);
+    assert.match(xhtml, /id="zwps-contact-qq"/);
+    assert.match(xhtml, /id="zwps-contact-email"/);
+    assert.match(js, /COMMUNITY_QQ = '1091139987'/);
+    assert.match(js, /COMMUNITY_EMAIL = 'ckern@qq\.com'/);
+});

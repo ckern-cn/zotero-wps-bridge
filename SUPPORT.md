@@ -10,12 +10,18 @@
 
 ## 提问渠道
 
+| 渠道 | 适合 | 说明 |
+| --- | --- | --- |
+| **QQ 群 `1091139987`** | 安装、使用、快速提问 | 无需 Gitee 账号；群内用户互助，不承诺实时回复 |
+| **邮箱 `ckern@qq.com`** | 没有 QQ、隐私相关、较长描述 | 请附操作系统、WPS/Zotero 版本和复现步骤，日志先脱敏 |
+| **Gitee Issues** | 可复现的 Bug、功能建议 | 便于跟踪和修复；没有 Gitee 账号可由群内或邮件转交 |
+
 - **主仓库**：Gitee <https://gitee.com/ckern/zotero-wps-bridge>
-- **Bug**：在 Gitee 使用 Bug 报告模板，附上操作系统、WPS 版本、Zotero 版本、复现步骤和经过脱敏的日志。
-- **功能建议**：在 Gitee 提交功能请求，说明使用场景和期望行为。
 - **GitHub**：只读镜像，不接受独立 Issue / PR；请回到 Gitee 提交。
 - **安全漏洞**：不要公开开 issue，请按 [`SECURITY.md`](SECURITY.md) 私密报告。
 - **其他问题**：可以开 issue；如果仓库启用了 Discussions，也可以在那里讨论。
+
+QQ 群主要用于用户互助和初步判断问题。确认是 Bug 后，维护者或志愿者会整理到 Gitee Issues，方便跟踪修复。请不要在群文件里传播安装包，官方安装包只从 <https://zw.ckern.cn/> 下载。
 
 ## 支持边界
 

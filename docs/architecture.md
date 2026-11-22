@@ -99,7 +99,7 @@ Zotero 的 `RequestHandler` 默认只对 `https://www.zotero.org` 返回 CORS �
       token: "...",
       locale: "zh-CN",
       ribbonLayout: "current",
-      addonVersion: "0.2.10"
+      addonVersion: "0.2.11"
   };
   ```
 

@@ -9,7 +9,7 @@
 
     function version() {
         const cfg = U.getConfig();
-        return cfg.addonVersion || '0.2.10';
+        return cfg.addonVersion || '0.2.11';
     }
 
     function docId() {
@@ -138,6 +138,9 @@
         if (options && options.donate) {
             data.donate = options.donate;
         }
+        if (options && options.contact) {
+            data.contact = options.contact;
+        }
         try {
             const wpsObject = typeof wps !== 'undefined' ? wps : null;
             const application = window.Application;
@@ -161,13 +164,13 @@
                     page.searchParams.set('payload', encoded);
                 }
                 const scale = Number(window.devicePixelRatio) || 1;
+                const extraHeight = (options && options.donate ? 240 : 0)
+                    + (options && options.contact ? 120 : 0);
                 const shown = app.ShowDialog(
                     page.href,
                     heading,
                     Math.round(560 * scale),
-                    Math.round(estimateDialogHeight(
-                        body, options && options.donate ? 240 : 0
-                    ) * scale),
+                    Math.round(estimateDialogHeight(body, extraHeight) * scale),
                     true,
                     false,
                     2
@@ -193,6 +196,16 @@
             U.t('wps.alert.about', { version: version() }),
             'info',
             {
+                contact: {
+                    title: U.t('contact.title'),
+                    copy: U.t('contact.copy'),
+                    qqLabel: U.t('contact.qqLabel'),
+                    qq: '1091139987',
+                    emailLabel: U.t('contact.emailLabel'),
+                    email: 'ckern@qq.com',
+                    emailSubject: U.t('contact.emailSubject'),
+                    note: U.t('contact.note')
+                },
                 donate: {
                     title: U.t('donate.title'),
                     copy: U.t('donate.copy'),

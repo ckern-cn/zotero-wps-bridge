@@ -149,6 +149,71 @@ button.zwps-danger {
     font-size: 0.92em;
 }
 
+.zwps-contact-card {
+    margin-top: 22px;
+    padding: 16px;
+    border: 1px solid #d7d7db;
+    border-radius: 8px;
+    background: #f7fbfa;
+    text-align: center;
+}
+
+.zwps-contact-title {
+    margin: 0;
+    color: #333;
+    font-size: 1em;
+    font-weight: 600;
+    text-align: center;
+}
+
+.zwps-contact-copy {
+    margin: 6px 0 0;
+    color: #555;
+    line-height: 1.55;
+    text-align: center;
+}
+
+.zwps-contact-links {
+    margin: 10px 0 0;
+    color: #333;
+    font-size: 0.95em;
+    line-height: 1.7;
+}
+
+.zwps-contact-label {
+    color: #666;
+}
+
+.zwps-contact-value {
+    margin-left: 4px;
+    font-family: monospace;
+    font-weight: 600;
+    user-select: all;
+}
+
+.zwps-contact-sep {
+    margin: 0 8px;
+    color: #aaa;
+}
+
+.zwps-contact-links a {
+    margin-left: 4px;
+    color: #0b7a6f;
+    text-decoration: none;
+}
+
+.zwps-contact-links a:hover {
+    text-decoration: underline;
+}
+
+.zwps-contact-note {
+    margin: 10px 0 0;
+    color: #777;
+    font-size: 0.88em;
+    line-height: 1.5;
+    text-align: center;
+}
+
 .zwps-donate-card {
     margin-top: 22px;
     padding: 16px;
@@ -260,6 +325,29 @@ button.zwps-danger {
 
     .zwps-studio {
         color: #a0a0a8;
+    }
+
+    .zwps-contact-card {
+        border-color: #4a4a51;
+        background: #243331;
+    }
+
+    .zwps-contact-title {
+        color: #f0f0f2;
+    }
+
+    .zwps-contact-copy,
+    .zwps-contact-links {
+        color: #b9b9c0;
+    }
+
+    .zwps-contact-label,
+    .zwps-contact-note {
+        color: #a0a0a8;
+    }
+
+    .zwps-contact-links a {
+        color: #5ad1c1;
     }
 
     .zwps-donate-card {

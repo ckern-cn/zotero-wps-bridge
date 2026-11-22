@@ -9,6 +9,10 @@
 > GitHub（只读镜像）：<https://github.com/ckern-cn/zotero-wps-bridge>
 >
 > 源码、安装包和更新清单均以官方站点与仓库发布页为准。
+>
+> **用户交流**：QQ 群 `1091139987` · 邮箱 `ckern@qq.com`
+>
+> 安装或使用问题可以先加群提问，也可以直接发邮件；可复现的 Bug 请在 [Gitee Issues](https://gitee.com/ckern/zotero-wps-bridge/issues) 提交。QQ 群用于用户互助，不承诺实时回复。
 
 这是一个“原生”集成方案，不需要安装 Python、Node 或其他本地代理进程：
 

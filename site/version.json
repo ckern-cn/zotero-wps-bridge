@@ -1,10 +1,10 @@
 {
-  "version": "0.2.10",
+  "version": "0.2.11",
   "date": "2026-11-22",
   "xpi": "/downloads/zotero-wps-bridge-latest.xpi",
   "zip": "/downloads/zotero-wps-bridge-addon-latest.zip",
-  "xpiVersioned": "/downloads/zotero-wps-bridge-0.2.10.xpi",
-  "zipVersioned": "/downloads/zotero-wps-bridge-addon-0.2.10.zip",
-  "sha256": "sha256:934cfe96bb43892a34ce197ce37340d74cefae29c3c05fbcd7451f39b1adadde",
+  "xpiVersioned": "/downloads/zotero-wps-bridge-0.2.11.xpi",
+  "zipVersioned": "/downloads/zotero-wps-bridge-addon-0.2.11.zip",
+  "sha256": "sha256:bea5e43f38bea7bd49f3cb0be38eb9c961faefa5971c6821fd5aac50c6e28227",
   "checksums": "/downloads/SHA256SUMS.txt"
 }

@@ -11,6 +11,8 @@ body:
 
         本项目所有已发布功能免费，不设付费版或捐赠解锁功能。
 
+        没有 Gitee 账号？可以加入 QQ 群 **1091139987** 或发邮件到 **ckern@qq.com**，由维护者协助整理。
+
   - type: textarea
     id: problem
     attributes:

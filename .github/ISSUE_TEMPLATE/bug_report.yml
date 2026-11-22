@@ -11,6 +11,8 @@ body:
 
         **安全漏洞请不要在这里公开**，请按 SECURITY.md 私密报告。
 
+        没有 Gitee 账号？可以加入 QQ 群 **1091139987** 或发邮件到 **ckern@qq.com**，由维护者协助整理。
+
   - type: input
     id: os
     attributes:

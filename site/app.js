@@ -214,6 +214,71 @@
         }
     }
 
+    /* Copy the QQ group number without requiring a QR code. */
+    for (const button of $$('[data-copy]')) {
+        button.addEventListener('click', function () {
+            const value = button.getAttribute('data-copy');
+            const original = button.textContent;
+            const copied = button.getAttribute('data-copied-label') || original;
+            const failed = button.getAttribute('data-copy-failed-label') || original;
+            const restore = function () {
+                window.setTimeout(function () {
+                    button.textContent = original;
+                    button.classList.remove('is-copied');
+                    button.classList.remove('is-error');
+                }, 2200);
+            };
+            const markCopied = function () {
+                button.textContent = copied;
+                button.classList.add('is-copied');
+                restore();
+            };
+            const markFailed = function () {
+                button.textContent = failed;
+                button.classList.add('is-error');
+                const card = button.closest('.community-card');
+                const valueNode = card && card.querySelector('.community-value');
+                if (valueNode && window.getSelection) {
+                    const range = document.createRange();
+                    range.selectNodeContents(valueNode);
+                    const selection = window.getSelection();
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+                restore();
+            };
+            const fallback = function () {
+                const field = document.createElement('textarea');
+                field.value = value;
+                field.setAttribute('readonly', '');
+                field.style.position = 'fixed';
+                field.style.opacity = '0';
+                document.body.appendChild(field);
+                field.select();
+                let ok = false;
+                try {
+                    ok = document.execCommand('copy');
+                }
+                catch (e) {
+                    ok = false;
+                }
+                document.body.removeChild(field);
+                if (ok) {
+                    markCopied();
+                }
+                else {
+                    markFailed();
+                }
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(value).then(markCopied).catch(fallback);
+            }
+            else {
+                fallback();
+            }
+        });
+    }
+
     /* Footer year */
     for (const element of $$('[data-year]')) {
         element.textContent = String(new Date().getFullYear());
